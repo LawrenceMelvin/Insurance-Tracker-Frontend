@@ -50,17 +50,25 @@ export default function LoginPage() {
     setLoginError(null);
 
     try {
-      // Here you would typically make an API call to your backend
-      // For now, we'll simulate a successful login after a delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("http://localhost:8080/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: data.email, // Spring Security expects 'username'
+          password: data.password,
+        }),
+        credentials: "include", // If using session cookies
+      });
 
-      // Mock authentication - in a real app, you'd validate with your backend
-      if (
-        data.email === "test@example.com" &&
-        data.password === "password123"
-      ) {
-        // Store auth token or user data in localStorage/sessionStorage
-        localStorage.setItem("isAuthenticated", "true");
+      if (response.ok) {
+        // If using JWT, you might get it in the Authorization header or response body
+        const authHeader = response.headers.get("Authorization");
+        if (authHeader && authHeader.startsWith("Bearer ")) {
+          localStorage.setItem("authToken", authHeader.replace("Bearer ", ""));
+        }
+        // If using session, you may not need to store anything
         navigate("/");
       } else {
         setLoginError("Invalid email or password. Please try again.");
@@ -167,6 +175,19 @@ export default function LoginPage() {
                 </span>
               )}
             </Button>
+            {/* Google Login Button */}
+            <a
+              href="http://localhost:8080//oauth2/authorization/google"
+              className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 transition"
+              style={{ textDecoration: "none" }}
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="h-5 w-5 mr-2"
+              />
+              Login with Google
+            </a>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">

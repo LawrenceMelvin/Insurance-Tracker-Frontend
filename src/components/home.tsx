@@ -12,47 +12,38 @@ interface Insurance {
   tenure: string;
 }
 
+interface InsuranceCardProps {
+  onView: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
 const Home = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [insurancePolicies, setInsurancePolicies] = useState<Insurance[]>([
-    {
-      id: "1",
-      companyName: "ABC Insurance",
-      type: "Health",
-      price: 5000,
-      tenure: "1 Year",
-    },
-    {
-      id: "2",
-      companyName: "XYZ Insurance",
-      type: "Life",
-      price: 10000,
-      tenure: "5 Years",
-    },
-    {
-      id: "3",
-      companyName: "PQR Insurance",
-      type: "Auto",
-      price: 3000,
-      tenure: "1 Year",
-    },
-  ]);
+  const [insurancePolicies, setInsurancePolicies] = useState<Insurance[]>([]);
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    // Check if user is authenticated
-    // This would typically involve checking for a token in localStorage or similar
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      // Redirect to login if not authenticated
-      // Commented out for development purposes
-      // navigate('/auth/login');
-      setIsAuthenticated(false);
-    } else {
-      setIsAuthenticated(true);
-      // Here you would fetch the user's insurance policies from the API
-      // For now we're using the mock data defined in state
-    }
+    // Check authentication status and get user info from backend
+    fetch("http://localhost:8080/user", {
+      credentials: "include", // Important for session cookies
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          setIsAuthenticated(true);
+          const user = await res.json();
+          // user.name or user.username depending on your backend Principal
+          setUserName(user.name || user.username || "");
+        } else {
+          setIsAuthenticated(false);
+          setUserName("");
+        }
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setUserName("");
+      });
   }, [navigate]);
 
   const handleAddInsurance = () => {
@@ -89,12 +80,15 @@ const Home = () => {
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <span className="text-sm text-gray-600">Welcome, User</span>
+                <span className="text-sm text-gray-600">
+                  Welcome, {userName || "User"}
+                </span>
                 <Button
                   variant="outline"
                   onClick={() => {
                     localStorage.removeItem("authToken");
                     setIsAuthenticated(false);
+                    setUserName("");
                     navigate("/auth/login");
                   }}
                 >
@@ -148,7 +142,6 @@ const Home = () => {
             {insurancePolicies.map((policy) => (
               <InsuranceCard
                 key={policy.id}
-                insurance={policy}
                 onView={() => handleViewDetails(policy.id)}
                 onEdit={() => handleEdit(policy.id)}
                 onDelete={() => handleDelete(policy.id)}

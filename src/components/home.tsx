@@ -12,12 +12,6 @@ interface Insurance {
   insuranceTerm: string;
 }
 
-interface InsuranceCardProps {
-  onView: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-}
-
 const Home = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null = loading
@@ -52,7 +46,7 @@ const Home = () => {
         .then(async (res) => {
           if (res.ok) {
             const data = await res.json();
-            setInsurancePolicies(data); // data should be an array of insurance objects
+            setInsurancePolicies(data);
           } else {
             setInsurancePolicies([]);
           }
@@ -60,22 +54,6 @@ const Home = () => {
         .catch(() => setInsurancePolicies([]));
     }
   }, [isAuthenticated]);
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (isAuthenticated === false) {
-      navigate("/auth/login");
-    }
-  }, [isAuthenticated, navigate]);
-
-  if (isAuthenticated === null) {
-    // Optionally show a loading spinner while checking auth
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <span>Loading...</span>
-      </div>
-    );
-  }
 
   const handleAddInsurance = () => {
     navigate("/add");
@@ -87,12 +65,10 @@ const Home = () => {
   };
 
   const handleEdit = (id: string) => {
-    // Navigate to edit page with the policy ID
     navigate(`/add?edit=${id}`);
   };
 
   const handleDelete = (id: string) => {
-    // Show confirmation dialog and delete if confirmed
     if (window.confirm("Are you sure you want to delete this policy?")) {
       setInsurancePolicies(
         insurancePolicies.filter((policy) => policy.insuranceId !== id),
@@ -116,7 +92,12 @@ const Home = () => {
                 </span>
                 <Button
                   variant="outline"
-                  onClick={() => {
+                  onClick={async () => {
+                    // Call backend logout endpoint
+                    await fetch("http://localhost:8080/logout", {
+                      method: "POST",
+                      credentials: "include",
+                    });
                     localStorage.removeItem("authToken");
                     setIsAuthenticated(false);
                     setUserName("");
@@ -148,35 +129,43 @@ const Home = () => {
           <h2 className="text-xl font-semibold text-gray-800">
             Your Insurance Policies
           </h2>
-          <Button
-            onClick={handleAddInsurance}
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Plus className="mr-2 h-4 w-4" /> Add Insurance
-          </Button>
+          {isAuthenticated && (
+            <Button
+              onClick={handleAddInsurance}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Plus className="mr-2 h-4 w-4" /> Add Insurance
+            </Button>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-6 justify-center p-6">
-          {insurancePolicies.length === 0 ? (
-            <div>No insurance policies found.</div>
+          {isAuthenticated ? (
+            insurancePolicies.length === 0 ? (
+              <div>No insurance policies found.</div>
+            ) : (
+              insurancePolicies.map((policy) => (
+                <InsuranceCard
+                  key={policy.insuranceId}
+                  insuranceId={policy.insuranceId?.toString()}
+                  insuranceName={policy.insuranceName}
+                  insuranceType={policy.insuranceType}
+                  insurancePrice={policy.insurancePrice}
+                  insuranceTerm={
+                    typeof policy.insuranceTerm === "number"
+                      ? `${policy.insuranceTerm} Year${policy.insuranceTerm > 1 ? "s" : ""}`
+                      : policy.insuranceTerm
+                  }
+                  onView={() => handleViewDetails(policy.insuranceId)}
+                  onEdit={() => handleEdit(policy.insuranceId)}
+                  onDelete={() => handleDelete(policy.insuranceId)}
+                />
+              ))
+            )
           ) : (
-            insurancePolicies.map((policy) => (
-              <InsuranceCard
-                key={policy.insuranceId}
-                insuranceId={policy.insuranceId?.toString()}
-                insuranceName={policy.insuranceName}
-                insuranceType={policy.insuranceType}
-                insurancePrice={policy.insurancePrice}
-                insuranceTerm={
-                  typeof policy.insuranceTerm === "number"
-                    ? `${policy.insuranceTerm} Year${policy.insuranceTerm > 1 ? "s" : ""}`
-                    : policy.insuranceTerm
-                }
-                onView={() => handleViewDetails(policy.insuranceId)}
-                onEdit={() => handleEdit(policy.insuranceId)}
-                onDelete={() => handleDelete(policy.insuranceId)}
-              />
-            ))
+            <div className="text-gray-500 text-lg mt-12">
+              Please log in to view your insurance policies.
+            </div>
           )}
         </div>
       </main>

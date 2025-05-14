@@ -21,22 +21,22 @@ import {
 } from "@/components/ui/dialog";
 
 interface InsuranceCardProps {
-  id?: string;
-  companyName?: string;
+  insuranceId?: string;
+  insuranceName?: string;
   insuranceType?: string;
-  price?: number;
-  tenure?: string;
-  onView?: (id: string) => void;
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  insurancePrice?: number;
+  insuranceTerm?: string;
+  onView?: (insuranceId: string) => void;
+  onEdit?: (insuranceId: string) => void;
+  onDelete?: (insuranceId: string) => void;
 }
 
 const InsuranceCard: React.FC<InsuranceCardProps> = ({
-  id = "1",
-  companyName = "ABC Insurance",
+  insuranceId = "1",
+  insuranceName = "ABC Insurance",
   insuranceType = "Health",
-  price = 1200,
-  tenure = "1 Year",
+  insurancePrice = 1200,
+  insuranceTerm = "1 Year",
   onView = () => {},
   onEdit = () => {},
   onDelete = () => {},
@@ -44,7 +44,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const handleDelete = () => {
-    onDelete(id);
+    onDelete(insuranceId);
     setIsDeleteDialogOpen(false);
   };
 
@@ -63,24 +63,24 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
     <Card className="w-[350px] h-[220px] bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg font-bold">{companyName}</CardTitle>
+          <CardTitle className="text-lg font-bold">{insuranceName}</CardTitle>
           <Badge className={getInsuranceTypeColor(insuranceType)}>
             {insuranceType}
           </Badge>
         </div>
         <CardDescription className="text-sm text-gray-500">
-          Policy ID: {id}
+          Policy ID: {insuranceId}
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-2">
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="text-sm font-medium text-gray-500">Premium:</span>
-            <span className="text-sm font-bold">${price.toLocaleString()}</span>
+            <span className="text-sm font-bold">${insurancePrice.toLocaleString()}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-sm font-medium text-gray-500">Tenure:</span>
-            <span className="text-sm">{tenure}</span>
+            <span className="text-sm">{insuranceTerm}</span>
           </div>
         </div>
       </CardContent>
@@ -89,7 +89,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
           variant="ghost"
           size="sm"
           className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-          onClick={() => onView(id)}
+          onClick={() => onView(insuranceId)}
         >
           <Eye className="h-4 w-4 mr-1" /> View
         </Button>
@@ -97,7 +97,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
           variant="ghost"
           size="sm"
           className="text-amber-600 hover:text-amber-800 hover:bg-amber-50"
-          onClick={() => onEdit(id)}
+          onClick={() => onEdit(insuranceId)}
         >
           <Pencil className="h-4 w-4 mr-1" /> Edit
         </Button>
@@ -116,7 +116,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
               <DialogTitle>Confirm Deletion</DialogTitle>
               <DialogDescription>
                 Are you sure you want to delete the insurance policy from{" "}
-                {companyName}? This action cannot be undone.
+                {insuranceName}? This action cannot be undone.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

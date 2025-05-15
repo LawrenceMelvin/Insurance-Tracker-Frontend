@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -32,6 +32,35 @@ const AddInsurancePage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/user", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      })
+      .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      navigate("/auth/login");
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span>Loading...</span>
+      </div>
+    );
+  }
 
   const insuranceTypes = [
     { value: "health", label: "Health Insurance" },
@@ -104,12 +133,26 @@ const AddInsurancePage = () => {
     setSubmitError("");
 
     try {
-      // Here you would typically make an API call to your backend
-      // For example:
-      // await api.post('/insurance', formData);
+      // Prepare data for backend
+      const payload = {
+        insuranceName: formData.companyName,
+        insuranceType: formData.insuranceType,
+        insurancePrice: Number(formData.price),
+        insuranceTerm: Number(formData.tenure),
+      };
 
-      // Simulate API call with timeout
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("http://localhost:8080/insurance/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add insurance");
+      }
 
       // Navigate back to home page after successful submission
       navigate("/");

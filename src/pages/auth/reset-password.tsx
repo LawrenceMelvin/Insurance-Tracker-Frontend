@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Mail } from "lucide-react";
+import { Mail, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -142,7 +142,7 @@ export default function ResetPassword() {
                   </span>
                 ) : (
                   <span className="flex items-center justify-center">
-                    <Mail className="mr-2 h-4 w-4" /> Send Reset Link
+                    <Lock className="mr-2 h-4 w-4" /> Update Password
                   </span>
                 )}
               </Button>

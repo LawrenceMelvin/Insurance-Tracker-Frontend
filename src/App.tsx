@@ -5,6 +5,7 @@ import Add from "./pages/add";
 import routes from "tempo-routes";
 import LoginPage from "@/pages/auth/login";
 import ResetPassword from "@/pages/auth/reset-password";
+import Register from "./pages/auth/register";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/add" element={<Add />} />
         <Route path="/auth/login" element={<LoginPage />} />
+        <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/reset-password" element={<ResetPassword />} />
       </Routes>
       {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}

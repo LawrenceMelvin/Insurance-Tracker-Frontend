@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +32,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   const {
     register,
@@ -45,30 +46,38 @@ export default function LoginPage() {
     },
   });
 
+  useEffect(() => {
+    fetch("http://localhost:8080/user", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          // User is authenticated, redirect to home
+          navigate("/");
+        }
+      })
+      .finally(() => setCheckingAuth(false));
+  }, [navigate]);
+
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
+      const formData = new URLSearchParams();
+      formData.append("username", data.email);
+      formData.append("password", data.password);
+
       const response = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({
-          username: data.email, // Spring Security expects 'username'
-          password: data.password,
-        }),
-        credentials: "include", // If using session cookies
+        body: formData.toString(),
+        credentials: "include",
       });
 
       if (response.ok) {
-        // If using JWT, you might get it in the Authorization header or response body
-        const authHeader = response.headers.get("Authorization");
-        if (authHeader && authHeader.startsWith("Bearer ")) {
-          localStorage.setItem("authToken", authHeader.replace("Bearer ", ""));
-        }
-        // If using session, you may not need to store anything
         navigate("/");
       } else {
         setLoginError("Invalid email or password. Please try again.");
@@ -84,6 +93,14 @@ export default function LoginPage() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span>Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -177,7 +194,7 @@ export default function LoginPage() {
             </Button>
             {/* Google Login Button */}
             <a
-              href="http://localhost:8080//oauth2/authorization/google"
+              href="http://localhost:8080/oauth2/authorization/google"
               className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 transition"
               style={{ textDecoration: "none" }}
             >

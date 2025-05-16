@@ -60,12 +60,21 @@ export default function Register() {
     setError(null);
 
     try {
-      // Here you would typically make an API call to register the user
-      // For example: await registerUser(data);
-      console.log("Registration data:", data);
+      const response = await fetch("http://localhost:8080/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: data.name,
+          userEmail: data.email,
+          userPassword: data.password,
+        }),
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!response.ok) {
+        throw new Error("Registration failed");
+      }
 
       // Redirect to login page after successful registration
       navigate("/auth/login");

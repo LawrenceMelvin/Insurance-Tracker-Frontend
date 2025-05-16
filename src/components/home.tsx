@@ -93,7 +93,6 @@ const Home = () => {
                 <Button
                   variant="outline"
                   onClick={async () => {
-                    // Call backend logout endpoint
                     await fetch("http://localhost:8080/auth/logout", {
                       method: "POST",
                       credentials: "include",
@@ -101,16 +100,7 @@ const Home = () => {
                     localStorage.removeItem("authToken");
                     setIsAuthenticated(false);
                     setUserName("");
-                    // Double-check logout by calling /user
-                    fetch("http://localhost:8080/user", { credentials: "include" })
-                      .then(res => {
-                        if (res.status === 401) {
-                          navigate("/auth/login");
-                        } else {
-                          // fallback: force reload
-                          window.location.href = "/auth/login";
-                        }
-                      });
+                    window.location.href = "/auth/login";
                   }}
                 >
                   Logout

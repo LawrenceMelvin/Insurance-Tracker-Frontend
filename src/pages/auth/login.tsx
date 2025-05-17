@@ -47,7 +47,7 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    fetch("http://localhost:8080/user", {
+    fetch("/api/user", {
       credentials: "include",
     })
       .then((res) => {
@@ -68,7 +68,7 @@ export default function LoginPage() {
       formData.append("username", data.email);
       formData.append("password", data.password);
 
-      const response = await fetch("http://localhost:8080/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +197,7 @@ export default function LoginPage() {
             </Button>
             {/* Google Login Button */}
             <a
-              href="http://localhost:8080/oauth2/authorization/google"
+              href="/api/oauth2/authorization/google"
               className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 transition"
               style={{ textDecoration: "none" }}
             >

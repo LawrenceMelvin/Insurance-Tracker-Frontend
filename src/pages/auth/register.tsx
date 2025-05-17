@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CheckCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,13 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const registerSchema = z
   .object({
@@ -40,6 +47,8 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const {
     register,
@@ -60,7 +69,7 @@ export default function Register() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8080/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,8 +85,9 @@ export default function Register() {
         throw new Error("Registration failed");
       }
 
-      // Redirect to login page after successful registration
-      navigate("/auth/login");
+      // Show verification dialog instead of immediate redirect
+      setRegisteredEmail(data.email);
+      setShowVerificationDialog(true);
     } catch (err) {
       setError("Registration failed. Please try again.");
       console.error("Registration error:", err);
@@ -88,6 +98,34 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <Dialog
+        open={showVerificationDialog}
+        onOpenChange={setShowVerificationDialog}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CheckCircle className="h-6 w-6 text-green-500" />
+              Verification Email Sent
+            </DialogTitle>
+            <DialogDescription>
+              A verification link has been sent to{" "}
+              <strong>{registeredEmail}</strong>. Please check your email and
+              click on the link to verify your account.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center mt-4">
+            <Button
+              onClick={() => {
+                setShowVerificationDialog(false);
+                navigate("/auth/login");
+              }}
+            >
+              Go to Login
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Card className="w-full max-w-md bg-white">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">

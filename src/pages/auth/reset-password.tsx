@@ -46,23 +46,19 @@ export default function ResetPassword() {
     setResetError(null);
 
     try {
-      // Mock API call with setTimeout
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await fetch("http://localhost:8080/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+        }),
+      });
 
-      // In a real application, you would call your API here
-      // const response = await fetch("http://localhost:8080/reset-password", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     email: data.email,
-      //   }),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("Failed to send reset password email");
-      // }
+      if (!response.ok) {
+        throw new Error("Failed to send reset password email");
+      }
 
       setIsSuccess(true);
     } catch (error) {

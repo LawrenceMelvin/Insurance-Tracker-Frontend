@@ -141,8 +141,14 @@ const AddInsurancePage = () => {
         insuranceTerm: Number(formData.tenure),
       };
 
-      const response = await fetch("http://localhost:8080/insurance/add", {
-        method: "POST",
+      const endpoint = isEditMode
+        ? `http://localhost:8080/insurance/update/${insuranceId}`
+        : "http://localhost:8080/insurance/add";
+
+      const method = isEditMode ? "PUT" : "POST";
+
+      const response = await fetch(endpoint, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },

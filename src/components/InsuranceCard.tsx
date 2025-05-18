@@ -76,7 +76,9 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="text-sm font-medium text-gray-500">Premium:</span>
-            <span className="text-sm font-bold">${insurancePrice.toLocaleString()}</span>
+            <span className="text-sm font-bold">
+              ${insurancePrice.toLocaleString()}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-sm font-medium text-gray-500">Tenure:</span>

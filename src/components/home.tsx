@@ -64,8 +64,8 @@ const Home = () => {
     console.log(`View details for policy ${id}`);
   };
 
-  const handleEdit = (id: string) => {
-    navigate(`/add?edit=${id}`);
+  const handleEditInsurance = (insuranceId: string) => {
+    navigate(`/add?edit=${insuranceId}`);
   };
 
   const handleDelete = (id: string) => {
@@ -156,7 +156,7 @@ const Home = () => {
                       : policy.insuranceTerm
                   }
                   onView={() => handleViewDetails(policy.insuranceId)}
-                  onEdit={() => handleEdit(policy.insuranceId)}
+                  onEdit={() => handleEditInsurance(policy.insuranceId)}
                   onDelete={() => handleDelete(policy.insuranceId)}
                 />
               ))

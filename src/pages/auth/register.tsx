@@ -228,6 +228,19 @@ export default function Register() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Create account"}
             </Button>
+            {/* Google Login Button */}
+            <a
+              href="/api/oauth2/authorization/google"
+              className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 transition"
+              style={{ textDecoration: "none" }}
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="h-5 w-5 mr-2"
+              />
+              Login with Google
+            </a>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">

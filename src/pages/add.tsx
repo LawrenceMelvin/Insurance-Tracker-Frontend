@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -33,6 +33,9 @@ const AddInsurancePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [insuranceId, setInsuranceId] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
     fetch("http://localhost:8080/user", {
@@ -47,6 +50,41 @@ const AddInsurancePage = () => {
       })
       .catch(() => setIsAuthenticated(false));
   }, []);
+
+  useEffect(() => {
+    // Check if we're in edit mode by looking for an id in the URL search params
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get("id");
+
+    if (id) {
+      setIsEditMode(true);
+      setInsuranceId(id);
+
+      // Fetch the insurance details to pre-fill the form
+      fetch(`http://localhost:8080/insurance/${id}`, {
+        credentials: "include",
+      })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error("Failed to fetch insurance details");
+          }
+        })
+        .then((data) => {
+          setFormData({
+            companyName: data.insuranceName || "",
+            insuranceType: data.insuranceType || "",
+            price: data.insurancePrice?.toString() || "",
+            tenure: data.insuranceTerm?.toString() || "",
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching insurance details:", error);
+          setSubmitError("Failed to load insurance details. Please try again.");
+        });
+    }
+  }, [location]);
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -175,7 +213,9 @@ const AddInsurancePage = () => {
       <div className="max-w-md mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Add Insurance</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              {isEditMode ? "Edit" : "Add"} Insurance
+            </CardTitle>
             <CardDescription>
               Enter the details of your new insurance policy
             </CardDescription>
@@ -285,7 +325,13 @@ const AddInsurancePage = () => {
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Adding..." : "Add Insurance"}
+                  {isSubmitting
+                    ? isEditMode
+                      ? "Updating..."
+                      : "Adding..."
+                    : isEditMode
+                      ? "Update Insurance"
+                      : "Add Insurance"}
                 </Button>
               </CardFooter>
             </form>

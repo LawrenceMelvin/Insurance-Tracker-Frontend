@@ -185,6 +185,37 @@ const Home = () => {
                   Your all-in-one solution for managing insurance policies with
                   ease.
                 </p>
+
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Example Insurance Policies
+                </h3>
+                <div className="flex flex-wrap gap-6 justify-center mb-10">
+                  <InsuranceCard
+                    insuranceId="example-1"
+                    insuranceName="HealthGuard Plus"
+                    insuranceType="Health"
+                    insurancePrice={1200}
+                    insuranceTerm="1 Year"
+                  />
+                  <InsuranceCard
+                    insuranceId="example-2"
+                    insuranceName="LifeSecure Premium"
+                    insuranceType="Life"
+                    insurancePrice={2500}
+                    insuranceTerm="10 Years"
+                  />
+                  <InsuranceCard
+                    insuranceId="example-3"
+                    insuranceName="AutoProtect Complete"
+                    insuranceType="Auto"
+                    insurancePrice={800}
+                    insuranceTerm="1 Year"
+                  />
+                </div>
+
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Key Features
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                   <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
                     <div className="flex justify-center mb-4">

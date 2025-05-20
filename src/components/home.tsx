@@ -176,12 +176,175 @@ const Home = () => {
               ))
             )
           ) : (
-            <div className="text-gray-500 text-lg mt-12">
-              Please log in to view your insurance policies.
+            <div className="flex flex-col items-center space-y-8 py-6">
+              <div className="text-center max-w-3xl mx-auto px-4">
+                <h2 className="text-3xl font-bold text-primary mb-4">
+                  Welcome to Insurance Tracker
+                </h2>
+                <p className="text-lg text-gray-600 mb-6">
+                  Your all-in-one solution for managing insurance policies with
+                  ease.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                    <div className="flex justify-center mb-4">
+                      <img
+                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=80"
+                        alt="Track Policies"
+                        className="rounded-lg h-40 w-full object-cover"
+                      />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800">
+                      Track All Policies
+                    </h3>
+                    <p className="text-gray-600">
+                      Keep all your insurance policies in one place for easy
+                      access and management.
+                    </p>
+                  </div>
+                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                    <div className="flex justify-center mb-4">
+                      <img
+                        src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400&q=80"
+                        alt="Renewal Reminders"
+                        className="rounded-lg h-40 w-full object-cover"
+                      />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800">
+                      Renewal Reminders
+                    </h3>
+                    <p className="text-gray-600">
+                      Never miss a renewal date with our automated reminder
+                      system.
+                    </p>
+                  </div>
+                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                    <div className="flex justify-center mb-4">
+                      <img
+                        src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&q=80"
+                        alt="Policy Comparison"
+                        className="rounded-lg h-40 w-full object-cover"
+                      />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800">
+                      Policy Comparison
+                    </h3>
+                    <p className="text-gray-600">
+                      Compare different policies to find the best coverage for
+                      your needs.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-center space-x-4 mt-8">
+                  <Button
+                    onClick={() => navigate("/auth/register")}
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    Get Started
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/auth/login")}
+                    variant="outline"
+                    size="lg"
+                  >
+                    Sign In
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
       </main>
+      <footer className="bg-gray-50 border-t border-gray-200 py-8 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+              <div className="bg-primary rounded-full p-1 text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+              </div>
+              <span className="font-semibold text-gray-700">
+                Insurance Tracker
+              </span>
+            </div>
+            <div className="flex space-x-6">
+              <a
+                href="#"
+                className="text-gray-500 hover:text-primary transition-colors duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                className="text-gray-500 hover:text-primary transition-colors duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                className="text-gray-500 hover:text-primary transition-colors duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div className="mt-8 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
+            © {new Date().getFullYear()} Insurance Tracker. All rights
+            reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -54,7 +54,7 @@ const AddInsurancePage = () => {
   useEffect(() => {
     // Check if we're in edit mode by looking for an id in the URL search params
     const searchParams = new URLSearchParams(location.search);
-    const id = searchParams.get("id");
+    const id = searchParams.get("edit");
 
     if (id) {
       setIsEditMode(true);

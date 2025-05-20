@@ -68,12 +68,26 @@ const Home = () => {
     navigate(`/add?edit=${insuranceId}`);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this policy?")) {
-      setInsurancePolicies(
-        insurancePolicies.filter((policy) => policy.insuranceId !== id),
-      );
-      // Here you would also make an API call to delete from the backend
+      try {
+        const response = await fetch(
+          `http://localhost:8080/insurance/delete/${id}`,
+          {
+            method: "DELETE",
+            credentials: "include",
+          },
+        );
+        if (!response.ok) {
+          throw new Error("Failed to delete insurance");
+        }
+        setInsurancePolicies(
+          insurancePolicies.filter((policy) => policy.insuranceId !== id),
+        );
+      } catch (error) {
+        alert("Failed to delete insurance. Please try again.");
+        console.error("Delete error:", error);
+      }
     }
   };
 

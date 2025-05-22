@@ -9,7 +9,9 @@ interface Insurance {
   insuranceName: string;
   insuranceType: string;
   insurancePrice: number;
-  insuranceTerm: string;
+  startDate?: string;
+  expiryDate?: string;
+  insuranceTerm?: string;
 }
 
 const Home = () => {
@@ -60,8 +62,7 @@ const Home = () => {
   };
 
   const handleViewDetails = (id: string) => {
-    // Navigate to details page or show details modal
-    console.log(`View details for policy ${id}`);
+    navigate(`/insurance/${id}`);
   };
 
   const handleEditInsurance = (insuranceId: string) => {
@@ -164,11 +165,7 @@ const Home = () => {
                   insuranceName={policy.insuranceName}
                   insuranceType={policy.insuranceType}
                   insurancePrice={policy.insurancePrice}
-                  insuranceTerm={
-                    typeof policy.insuranceTerm === "number"
-                      ? `${policy.insuranceTerm} Year${policy.insuranceTerm > 1 ? "s" : ""}`
-                      : policy.insuranceTerm
-                  }
+                  expiryDate={policy.expiryDate}
                   onView={() => handleViewDetails(policy.insuranceId)}
                   onEdit={() => handleEditInsurance(policy.insuranceId)}
                   onDelete={() => handleDelete(policy.insuranceId)}
@@ -195,21 +192,21 @@ const Home = () => {
                     insuranceName="HealthGuard Plus"
                     insuranceType="Health"
                     insurancePrice={1200}
-                    insuranceTerm="1 Year"
+                    expiryDate="2025-06-30"
                   />
                   <InsuranceCard
                     insuranceId="example-2"
                     insuranceName="LifeSecure Premium"
                     insuranceType="Life"
                     insurancePrice={2500}
-                    insuranceTerm="10 Years"
+                    expiryDate="2035-12-31"
                   />
                   <InsuranceCard
                     insuranceId="example-3"
                     insuranceName="AutoProtect Complete"
                     insuranceType="Auto"
                     insurancePrice={800}
-                    insuranceTerm="1 Year"
+                    expiryDate="2025-03-15"
                   />
                 </div>
 

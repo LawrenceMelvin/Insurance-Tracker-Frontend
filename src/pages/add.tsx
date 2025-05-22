@@ -292,27 +292,36 @@ const AddInsurancePage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="tenure">Tenure</Label>
-                <Select
-                  value={formData.tenure}
-                  onValueChange={(value) => handleSelectChange("tenure", value)}
-                >
-                  <SelectTrigger
-                    id="tenure"
-                    className={errors.tenure ? "border-destructive" : ""}
-                  >
-                    <SelectValue placeholder="Select tenure period" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tenureOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.tenure && (
-                  <p className="text-sm text-destructive">{errors.tenure}</p>
+                <Label htmlFor="startDate">Insurance Start Date</Label>
+                <Input
+                  id="startDate"
+                  name="startDate"
+                  type="date"
+                  placeholder="Select start date"
+                  value={formData.startDate}
+                  onChange={handleInputChange}
+                  className={errors.startDate ? "border-destructive" : ""}
+                />
+                {errors.startDate && (
+                  <p className="text-sm text-destructive">{errors.startDate}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Input
+                  id="expiryDate"
+                  name="expiryDate"
+                  type="date"
+                  placeholder="Select expiry date"
+                  value={formData.expiryDate}
+                  onChange={handleInputChange}
+                  className={errors.expiryDate ? "border-destructive" : ""}
+                />
+                {errors.expiryDate && (
+                  <p className="text-sm text-destructive">
+                    {errors.expiryDate}
+                  </p>
                 )}
               </div>
 

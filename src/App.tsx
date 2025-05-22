@@ -6,6 +6,7 @@ import routes from "tempo-routes";
 import LoginPage from "@/pages/auth/login";
 import ResetPassword from "@/pages/auth/reset-password";
 import Register from "./pages/auth/register";
+import SetNewPassword from "@/pages/auth/set-new-password";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/reset-password" element={<ResetPassword />} />
+        <Route path="/auth/set-new-password" element={<SetNewPassword />} />
       </Routes>
       {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
     </Suspense>

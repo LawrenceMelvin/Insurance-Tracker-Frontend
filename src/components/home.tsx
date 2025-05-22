@@ -9,8 +9,8 @@ interface Insurance {
   insuranceName: string;
   insuranceType: string;
   insurancePrice: number;
-  startDate?: string;
-  expiryDate?: string;
+  insuranceFromDate?: string;
+  insuranceToDate?: string;
   insuranceTerm?: string;
 }
 
@@ -161,11 +161,11 @@ const Home = () => {
               insurancePolicies.map((policy) => (
                 <InsuranceCard
                   key={policy.insuranceId}
-                  insuranceId={policy.insuranceId?.toString()}
+                  insuranceId={policy.insuranceId}
                   insuranceName={policy.insuranceName}
                   insuranceType={policy.insuranceType}
                   insurancePrice={policy.insurancePrice}
-                  expiryDate={policy.expiryDate}
+                  insuranceToDate={policy.insuranceToDate} // <-- camelCase!
                   onView={() => handleViewDetails(policy.insuranceId)}
                   onEdit={() => handleEditInsurance(policy.insuranceId)}
                   onDelete={() => handleDelete(policy.insuranceId)}
@@ -192,21 +192,21 @@ const Home = () => {
                     insuranceName="HealthGuard Plus"
                     insuranceType="Health"
                     insurancePrice={1200}
-                    expiryDate="2025-06-30"
+                    insuranceToDate="2025-06-30"
                   />
                   <InsuranceCard
                     insuranceId="example-2"
                     insuranceName="LifeSecure Premium"
                     insuranceType="Life"
                     insurancePrice={2500}
-                    expiryDate="2035-12-31"
+                    insuranceToDate="2035-12-31"
                   />
                   <InsuranceCard
                     insuranceId="example-3"
                     insuranceName="AutoProtect Complete"
                     insuranceType="Auto"
                     insurancePrice={800}
-                    expiryDate="2025-03-15"
+                    insuranceToDate="2025-03-15"
                   />
                 </div>
 

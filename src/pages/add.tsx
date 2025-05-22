@@ -27,7 +27,8 @@ const AddInsurancePage = () => {
     companyName: "",
     insuranceType: "",
     price: "",
-    tenure: "",
+    startDate: "",
+    ExpiryDate: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,7 +77,8 @@ const AddInsurancePage = () => {
             companyName: data.insuranceName || "",
             insuranceType: data.insuranceType || "",
             price: data.insurancePrice?.toString() || "",
-            tenure: data.insuranceTerm?.toString() || "",
+            startDate: data.insuranceFromDate?.toString() || "",
+            ExpiryDate: data.insuranceToDate?.toString() || "",
           });
         })
         .catch((error) => {
@@ -108,13 +110,13 @@ const AddInsurancePage = () => {
     { value: "travel", label: "Travel Insurance" },
   ];
 
-  const tenureOptions = [
-    { value: "1", label: "1 Year" },
-    { value: "2", label: "2 Years" },
-    { value: "3", label: "3 Years" },
-    { value: "5", label: "5 Years" },
-    { value: "10", label: "10 Years" },
-  ];
+  // const tenureOptions = [
+  //   { value: "1", label: "1 Year" },
+  //   { value: "2", label: "2 Years" },
+  //   { value: "3", label: "3 Years" },
+  //   { value: "5", label: "5 Years" },
+  //   { value: "10", label: "10 Years" },
+  // ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -152,8 +154,12 @@ const AddInsurancePage = () => {
       newErrors.price = "Please enter a valid price";
     }
 
-    if (!formData.tenure) {
-      newErrors.tenure = "Please select a tenure";
+    if (!formData.startDate) {
+      newErrors.startDate = "Start date is required";
+    }
+
+    if (!formData.ExpiryDate) {
+      newErrors.ExpiryDate = "Expiry date is required";
     }
 
     setErrors(newErrors);
@@ -176,7 +182,8 @@ const AddInsurancePage = () => {
         insuranceName: formData.companyName,
         insuranceType: formData.insuranceType,
         insurancePrice: Number(formData.price),
-        insuranceTerm: Number(formData.tenure),
+        insuranceFromDate: formData.startDate,
+        insuranceToDate: formData.ExpiryDate,
       };
 
       const endpoint = isEditMode
@@ -308,19 +315,19 @@ const AddInsurancePage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Label htmlFor="ExpiryDate">Expiry Date</Label>
                 <Input
-                  id="expiryDate"
-                  name="expiryDate"
+                  id="ExpiryDate"
+                  name="ExpiryDate"
                   type="date"
                   placeholder="Select expiry date"
-                  value={formData.expiryDate}
+                  value={formData.ExpiryDate}
                   onChange={handleInputChange}
-                  className={errors.expiryDate ? "border-destructive" : ""}
+                  className={errors.ExpiryDate ? "border-destructive" : ""}
                 />
-                {errors.expiryDate && (
+                {errors.ExpiryDate && (
                   <p className="text-sm text-destructive">
-                    {errors.expiryDate}
+                    {errors.ExpiryDate}
                   </p>
                 )}
               </div>

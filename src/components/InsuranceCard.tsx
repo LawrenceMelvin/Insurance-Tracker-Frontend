@@ -25,7 +25,7 @@ interface InsuranceCardProps {
   insuranceName?: string;
   insuranceType?: string;
   insurancePrice?: number;
-  expiryDate?: string;
+  insuranceToDate?: string;
   onView?: (insuranceId: string) => void;
   onEdit?: (insuranceId: string) => void;
   onDelete?: (insuranceId: string) => void;
@@ -36,7 +36,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
   insuranceName = "ABC Insurance",
   insuranceType = "Health",
   insurancePrice = 1200,
-  expiryDate = "2025-12-31",
+  insuranceToDate = "2025-12-31",
   onView = () => {},
   onEdit = () => {},
   onDelete = () => {},
@@ -83,7 +83,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <div className="flex justify-between">
             <span className="text-sm font-medium text-gray-500">Expires:</span>
             <span className="text-sm">
-              {new Date(expiryDate).toLocaleDateString()}
+              {new Date(insuranceToDate).toLocaleDateString()}
             </span>
           </div>
         </div>

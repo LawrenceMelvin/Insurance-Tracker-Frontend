@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -29,10 +29,12 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
 
   const {
     register,
@@ -47,6 +49,20 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
+    // Check for token in URL
+    const searchParams = new URLSearchParams(location.search);
+    const token = searchParams.get("token");
+    if (token) {
+      fetch(`/api/auth/register/verify?token=${token}`)
+        .then((res) => res.ok)
+        .then((success) => {
+          if (success) {
+            setVerificationSuccess(true);
+            // Optionally, remove token from URL
+            window.history.replaceState({}, document.title, "/auth/login");
+          }
+        });
+    }
     fetch("/api/user", {
       credentials: "include",
     })
@@ -57,17 +73,13 @@ export default function LoginPage() {
         }
       })
       .finally(() => setCheckingAuth(false));
-  }, [navigate]);
+  }, [navigate, location.search]);
 
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
-      const formData = new URLSearchParams();
-      formData.append("username", data.email);
-      formData.append("password", data.password);
-
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -82,6 +94,14 @@ export default function LoginPage() {
 
       if (response.ok) {
         navigate("/");
+      } else if (response.status === 403) {
+        // Try to parse the backend message
+        const result = await response.json().catch(() => null);
+        if (result && result.message === "Email not verified") {
+          setLoginError("Your email is not verified. Please check your inbox.");
+        } else {
+          setLoginError("Access forbidden.");
+        }
       } else {
         setLoginError("Invalid email or password. Please try again.");
       }
@@ -120,6 +140,13 @@ export default function LoginPage() {
           {loginError && (
             <Alert variant="destructive" className="mb-4">
               <AlertDescription>{loginError}</AlertDescription>
+            </Alert>
+          )}
+          {verificationSuccess && (
+            <Alert variant="default" className="mb-4">
+              <AlertDescription>
+                Email verified successfully! You can now log in.
+              </AlertDescription>
             </Alert>
           )}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

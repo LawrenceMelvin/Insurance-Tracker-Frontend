@@ -17,8 +17,8 @@ interface Insurance {
   insuranceName: string;
   insuranceType: string;
   insurancePrice: number;
-  startDate?: string;
-  expiryDate?: string;
+  insuranceFromDate?: string;
+  insuranceToDate?: string;
 }
 
 const InsuranceDetailsPage = () => {
@@ -45,8 +45,8 @@ const InsuranceDetailsPage = () => {
         setInsurance(data);
 
         // Calculate days remaining
-        if (data.expiryDate) {
-          const expiryDate = new Date(data.expiryDate);
+        if (data.insuranceToDate) {
+          const expiryDate = new Date(data.insuranceToDate);
           const today = new Date();
           const diffTime = expiryDate.getTime() - today.getTime();
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -175,20 +175,20 @@ const InsuranceDetailsPage = () => {
                     </span>
                   </div>
 
-                  {insurance.startDate && (
+                  {insurance.insuranceFromDate && (
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Start Date:</span>
                       <span className="font-medium">
-                        {new Date(insurance.startDate).toLocaleDateString()}
+                        {new Date(insurance.insuranceFromDate).toLocaleDateString()}
                       </span>
                     </div>
                   )}
 
-                  {insurance.expiryDate && (
+                  {insurance.insuranceToDate && (
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Expiry Date:</span>
                       <span className="font-medium">
-                        {new Date(insurance.expiryDate).toLocaleDateString()}
+                        {new Date(insurance.insuranceToDate).toLocaleDateString()}
                       </span>
                     </div>
                   )}
@@ -206,8 +206,6 @@ const InsuranceDetailsPage = () => {
                       Days Remaining
                     </div>
                   </div>
-                  <Clock className="absolute top-4 right-4 h-6 w-6 text-primary/60" />
-                  <Calendar className="absolute bottom-4 left-4 h-6 w-6 text-primary/60" />
                 </div>
 
                 {daysRemaining <= 30 && (

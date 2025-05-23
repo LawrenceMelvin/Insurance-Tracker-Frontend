@@ -179,7 +179,9 @@ const InsuranceDetailsPage = () => {
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Start Date:</span>
                       <span className="font-medium">
-                        {new Date(insurance.insuranceFromDate).toLocaleDateString()}
+                        {new Date(
+                          insurance.insuranceFromDate,
+                        ).toLocaleDateString()}
                       </span>
                     </div>
                   )}
@@ -188,7 +190,9 @@ const InsuranceDetailsPage = () => {
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Expiry Date:</span>
                       <span className="font-medium">
-                        {new Date(insurance.insuranceToDate).toLocaleDateString()}
+                        {new Date(
+                          insurance.insuranceToDate,
+                        ).toLocaleDateString()}
                       </span>
                     </div>
                   )}
@@ -196,23 +200,23 @@ const InsuranceDetailsPage = () => {
               </div>
 
               <div className="flex flex-col items-center justify-center">
-                <div className="relative w-48 h-48 rounded-full border-8 border-primary flex items-center justify-center bg-white shadow-lg">
-                  <div className="absolute inset-0 rounded-full border-4 border-primary/20"></div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary">
+                <div className="relative w-48 h-48 rounded-full border-8 border-primary flex items-center justify-center bg-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl group">
+                  <div className="absolute inset-0 rounded-full border-4 border-primary/20 animate-pulse"></div>
+                  <div className="text-center transition-all duration-300 group-hover:transform group-hover:scale-110">
+                    <div className="text-5xl font-extrabold text-primary">
                       {daysRemaining}
                     </div>
-                    <div className="text-sm text-gray-500 mt-1">
+                    <div className="text-sm font-medium text-gray-600 mt-2">
                       Days Remaining
                     </div>
                   </div>
                 </div>
 
                 {daysRemaining <= 30 && (
-                  <div className="mt-4 bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm font-medium flex items-center">
+                  <div className="mt-6 bg-red-50 text-red-700 px-6 py-3 rounded-full text-sm font-medium flex items-center shadow-md animate-pulse hover:bg-red-100 transition-all duration-300">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-1"
+                      className="h-5 w-5 mr-2"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -222,7 +226,7 @@ const InsuranceDetailsPage = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    Expiring soon!
+                    <span className="font-semibold">Expiring soon!</span>
                   </div>
                 )}
               </div>

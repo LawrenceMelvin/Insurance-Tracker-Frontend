@@ -286,8 +286,8 @@ const Home = () => {
       </main>
       <footer className="bg-gray-50 border-t border-gray-200 py-8 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center space-x-2 mb-6">
               <div className="bg-primary rounded-full p-1 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -308,7 +308,7 @@ const Home = () => {
                 Insurance Tracker
               </span>
             </div>
-            <div className="flex space-x-6">
+            <div className="flex space-x-6 mt-4">
               <a
                 href="#"
                 className="text-gray-500 hover:text-primary transition-colors duration-300"
@@ -366,10 +366,6 @@ const Home = () => {
                 </svg>
               </a>
             </div>
-          </div>
-          <div className="mt-8 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} Insurance Tracker. All rights
-            reserved.
           </div>
         </div>
       </footer>

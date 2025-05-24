@@ -284,15 +284,15 @@ const Home = () => {
           )}
         </div>
       </main>
-      <footer className="bg-gray-50 border-t border-gray-200 py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center">
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="bg-primary rounded-full p-1 text-white">
+      <footer className="bg-gray-50 border-t border-gray-200 py-3 mt-6">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <div className="bg-primary rounded-full p-0.5 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="12"
+                  height="12"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -304,19 +304,19 @@ const Home = () => {
                   <path d="m9 12 2 2 4-4" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-700">
+              <span className="text-sm font-semibold text-gray-700">
                 Insurance Tracker
               </span>
             </div>
-            <div className="flex space-x-6 mt-4">
+            <div className="flex space-x-4">
               <a
                 href="#"
                 className="text-gray-500 hover:text-primary transition-colors duration-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -333,8 +333,8 @@ const Home = () => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -353,8 +353,8 @@ const Home = () => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"

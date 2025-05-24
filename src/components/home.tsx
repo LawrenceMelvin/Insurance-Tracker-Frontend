@@ -93,7 +93,8 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">
@@ -138,8 +139,9 @@ const Home = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
+      {/* Main content */}
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h2 className="text-xl font-semibold text-gray-800">
             Your Insurance Policies
           </h2>
@@ -284,6 +286,8 @@ const Home = () => {
           )}
         </div>
       </main>
+
+      {/* Footer */}
       <footer className="bg-gray-50 border-t border-gray-200 py-3 mt-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center">

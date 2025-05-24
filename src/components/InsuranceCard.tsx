@@ -64,7 +64,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-bold">{insuranceName}</CardTitle>
-          <Badge className={getInsuranceTypeColor(insuranceType)}>
+          <Badge className={`${getInsuranceTypeColor(insuranceType)}`}>
             {insuranceType}
           </Badge>
         </div>

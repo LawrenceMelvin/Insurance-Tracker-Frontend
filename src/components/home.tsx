@@ -21,7 +21,7 @@ const Home = () => {
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    fetch("http://localhost:8080/user", {
+    fetch("/api/user", {
       credentials: "include",
     })
       .then(async (res) => {
@@ -42,7 +42,7 @@ const Home = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetch("http://localhost:8080/", {
+      fetch("/api/", {
         credentials: "include",
       })
         .then(async (res) => {
@@ -72,13 +72,10 @@ const Home = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this policy?")) {
       try {
-        const response = await fetch(
-          `http://localhost:8080/insurance/delete/${id}`,
-          {
-            method: "DELETE",
-            credentials: "include",
-          },
-        );
+        const response = await fetch(`/api/insurance/delete/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
         if (!response.ok) {
           throw new Error("Failed to delete insurance");
         }
@@ -109,7 +106,7 @@ const Home = () => {
                 <Button
                   variant="outline"
                   onClick={async () => {
-                    await fetch("http://localhost:8080/auth/logout", {
+                    await fetch("/api/auth/logout", {
                       method: "POST",
                       credentials: "include",
                     });

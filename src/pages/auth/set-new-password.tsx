@@ -35,7 +35,7 @@ export default function SetNewPassword() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/auth/reset-password", {
+      const response = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: password }),
@@ -53,7 +53,9 @@ export default function SetNewPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md bg-white p-6 rounded shadow">
-        <h2 className="text-2xl font-bold mb-4 text-center">Set New Password</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          Set New Password
+        </h2>
         {error && (
           <Alert variant="destructive" className="mb-4">
             <AlertDescription>{error}</AlertDescription>
@@ -73,7 +75,7 @@ export default function SetNewPassword() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
@@ -83,7 +85,7 @@ export default function SetNewPassword() {
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
             </div>

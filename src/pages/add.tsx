@@ -39,7 +39,7 @@ const AddInsurancePage = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetch("http://localhost:8080/user", {
+    fetch("/api/user", {
       credentials: "include",
     })
       .then((res) => {
@@ -62,7 +62,7 @@ const AddInsurancePage = () => {
       setInsuranceId(id);
 
       // Fetch the insurance details to pre-fill the form
-      fetch(`http://localhost:8080/insurance/${id}`, {
+      fetch(`/api/insurance/${id}`, {
         credentials: "include",
       })
         .then((res) => {
@@ -187,8 +187,8 @@ const AddInsurancePage = () => {
       };
 
       const endpoint = isEditMode
-        ? `http://localhost:8080/insurance/update/${insuranceId}`
-        : "http://localhost:8080/insurance/add";
+        ? `/api/insurance/update/${insuranceId}`
+        : "/api/insurance/add";
 
       const method = isEditMode ? "PUT" : "POST";
 

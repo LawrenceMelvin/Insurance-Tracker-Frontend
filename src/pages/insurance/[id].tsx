@@ -33,7 +33,7 @@ const InsuranceDetailsPage = () => {
     const fetchInsuranceDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:8080/insurance/${id}`, {
+        const response = await fetch(`/api/insurance/${id}`, {
           credentials: "include",
         });
 
@@ -246,13 +246,10 @@ const InsuranceDetailsPage = () => {
                 if (
                   window.confirm("Are you sure you want to delete this policy?")
                 ) {
-                  fetch(
-                    `http://localhost:8080/insurance/delete/${insurance.insuranceId}`,
-                    {
-                      method: "DELETE",
-                      credentials: "include",
-                    },
-                  )
+                  fetch(`/api/insurance/delete/${insurance.insuranceId}`, {
+                    method: "DELETE",
+                    credentials: "include",
+                  })
                     .then((response) => {
                       if (response.ok) {
                         navigate("/");

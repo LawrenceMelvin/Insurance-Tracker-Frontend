@@ -215,7 +215,7 @@ const Home = () => {
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">
                   Key Features
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
                     <div className="flex justify-center mb-4">
                       <img
@@ -246,22 +246,6 @@ const Home = () => {
                     <p className="text-gray-600">
                       Never miss a renewal date with our automated reminder
                       system.
-                    </p>
-                  </div>
-                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-                    <div className="flex justify-center mb-4">
-                      <img
-                        src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&q=80"
-                        alt="Policy Comparison"
-                        className="rounded-lg h-40 w-full object-cover"
-                      />
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2 text-gray-800">
-                      Policy Comparison
-                    </h3>
-                    <p className="text-gray-600">
-                      Compare different policies to find the best coverage for
-                      your needs.
                     </p>
                   </div>
                 </div>

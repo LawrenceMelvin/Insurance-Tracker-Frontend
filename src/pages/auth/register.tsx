@@ -27,7 +27,6 @@ import {
 
 const registerSchema = z
   .object({
-    name: z.string().min(2, { message: "Name must be at least 2 characters" }),
     email: z.string().email({ message: "Please enter a valid email address" }),
     password: z
       .string()
@@ -57,7 +56,6 @@ export default function Register() {
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -75,7 +73,6 @@ export default function Register() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userName: data.name,
           userEmail: data.email,
           userPassword: data.password,
         }),
@@ -142,18 +139,6 @@ export default function Register() {
             </Alert>
           )}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                placeholder="John Doe"
-                {...register("name")}
-                className={errors.name ? "border-red-500" : ""}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>

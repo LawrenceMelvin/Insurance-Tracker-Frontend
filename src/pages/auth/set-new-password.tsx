@@ -16,6 +16,7 @@ export default function SetNewPassword() {
   // Get token from URL
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token");
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ export default function SetNewPassword() {
     }
 
     try {
-      const response = await fetch("/api/auth/reset-password", {
+      const response = await fetch(`${apiUrl}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: password }),

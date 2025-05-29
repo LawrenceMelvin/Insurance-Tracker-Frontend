@@ -21,6 +21,8 @@ import {
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+
 const AddInsurancePage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -39,7 +41,7 @@ const AddInsurancePage = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetch("/api/user", {
+    fetch(`${apiUrl}/user`, {
       credentials: "include",
     })
       .then((res) => {
@@ -62,7 +64,7 @@ const AddInsurancePage = () => {
       setInsuranceId(id);
 
       // Fetch the insurance details to pre-fill the form
-      fetch(`/api/insurance/${id}`, {
+      fetch(`${apiUrl}/insurance/${id}`, {
         credentials: "include",
       })
         .then((res) => {
@@ -187,8 +189,8 @@ const AddInsurancePage = () => {
       };
 
       const endpoint = isEditMode
-        ? `/api/insurance/update/${insuranceId}`
-        : "/api/insurance/add";
+        ? `${apiUrl}/insurance/update/${insuranceId}`
+        : `${apiUrl}/insurance/add`;
 
       const method = isEditMode ? "PUT" : "POST";
 

@@ -38,6 +38,8 @@ const registerSchema = z
     path: ["confirmPassword"],
   });
 
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function Register() {
@@ -67,7 +69,7 @@ export default function Register() {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch(`${apiUrl}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +217,7 @@ export default function Register() {
             </Button>
             {/* Google Login Button */}
             <a
-              href="/api/oauth2/authorization/google"
+              href={`${apiUrl}/oauth2/authorization/google`}
               className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 transition"
               style={{ textDecoration: "none" }}
             >

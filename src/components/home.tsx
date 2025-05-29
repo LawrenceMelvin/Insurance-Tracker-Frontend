@@ -14,6 +14,8 @@ interface Insurance {
   insuranceTerm?: string;
 }
 
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+
 const Home = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null = loading
@@ -21,7 +23,7 @@ const Home = () => {
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    fetch("/api/user", {
+    fetch(`${apiUrl}/user`, {
       credentials: "include",
     })
       .then(async (res) => {
@@ -42,7 +44,7 @@ const Home = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetch("/api/", {
+      fetch(`${apiUrl}/insurance`, {
         credentials: "include",
       })
         .then(async (res) => {
@@ -72,7 +74,7 @@ const Home = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this policy?")) {
       try {
-        const response = await fetch(`/api/insurance/delete/${id}`, {
+        const response = await fetch(`${apiUrl}/insurance/delete/${id}`, {
           method: "DELETE",
           credentials: "include",
         });
@@ -106,7 +108,7 @@ const Home = () => {
                 <Button
                   variant="outline"
                   onClick={async () => {
-                    await fetch("/api/auth/logout", {
+                    await fetch(`${apiUrl}/auth/logout`, {
                       method: "POST",
                       credentials: "include",
                     });

@@ -21,6 +21,8 @@ interface Insurance {
   insuranceToDate?: string;
 }
 
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+
 const InsuranceDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ const InsuranceDetailsPage = () => {
     const fetchInsuranceDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/insurance/${id}`, {
+        const response = await fetch(`${apiUrl}/insurance/${id}`, {
           credentials: "include",
         });
 
@@ -246,7 +248,7 @@ const InsuranceDetailsPage = () => {
                 if (
                   window.confirm("Are you sure you want to delete this policy?")
                 ) {
-                  fetch(`/api/insurance/delete/${insurance.insuranceId}`, {
+                  fetch(`${apiUrl}/insurance/delete/${insurance.insuranceId}`, {
                     method: "DELETE",
                     credentials: "include",
                   })

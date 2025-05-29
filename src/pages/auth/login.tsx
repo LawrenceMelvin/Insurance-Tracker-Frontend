@@ -27,6 +27,8 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,7 +55,7 @@ export default function LoginPage() {
     const searchParams = new URLSearchParams(location.search);
     const token = searchParams.get("token");
     if (token) {
-      fetch(`/api/auth/register/verify?token=${token}`)
+      fetch(`${apiUrl}/auth/register/verify?token=${token}`)
         .then((res) => res.ok)
         .then((success) => {
           if (success) {
@@ -63,7 +65,7 @@ export default function LoginPage() {
           }
         });
     }
-    fetch("/api/user", {
+    fetch(`${apiUrl}/user`, {
       credentials: "include",
     })
       .then((res) => {
@@ -80,7 +82,7 @@ export default function LoginPage() {
     setLoginError(null);
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -224,7 +226,7 @@ export default function LoginPage() {
             </Button>
             {/* Google Login Button */}
             <a
-              href="/api/oauth2/authorization/google"
+              href={`${apiUrl}/oauth2/authorization/google`}
               className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 transition"
               style={{ textDecoration: "none" }}
             >

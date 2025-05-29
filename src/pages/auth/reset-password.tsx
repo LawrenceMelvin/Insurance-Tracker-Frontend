@@ -22,6 +22,8 @@ const resetPasswordSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
 });
 
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPassword() {
@@ -46,7 +48,7 @@ export default function ResetPassword() {
     setResetError(null);
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
+      const response = await fetch(`${apiUrl}/auth/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

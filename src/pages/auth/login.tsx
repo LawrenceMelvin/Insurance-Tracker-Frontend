@@ -95,9 +95,16 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        navigate("/");
+        // Now check if the session is valid by calling /user
+        const userRes = await fetch(`${apiUrl}/user`, {
+          credentials: "include",
+        });
+        if (userRes.ok) {
+          navigate("/");
+        } else {
+          setLoginError("Login failed. Please try again.");
+        }
       } else if (response.status === 403) {
-        // Try to parse the backend message
         const result = await response.json().catch(() => null);
         if (result && result.message === "Email not verified") {
           setLoginError("Your email is not verified. Please check your inbox.");

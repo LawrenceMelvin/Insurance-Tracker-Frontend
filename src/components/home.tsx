@@ -44,7 +44,7 @@ const Home = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetch(`${apiUrl}/insurance`, {
+      fetch(`${apiUrl}/`, {
         credentials: "include",
       })
         .then(async (res) => {

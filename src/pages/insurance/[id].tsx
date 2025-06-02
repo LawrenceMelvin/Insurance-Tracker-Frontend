@@ -173,7 +173,7 @@ const InsuranceDetailsPage = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Premium Amount:</span>
                     <span className="font-medium">
-                      ${insurance.insurancePrice?.toLocaleString()}
+                      {insurance.insurancePrice?.toLocaleString()}
                     </span>
                   </div>
 
@@ -202,6 +202,18 @@ const InsuranceDetailsPage = () => {
               </div>
 
               <div className="flex flex-col items-center justify-center">
+                {/* Coverage Amount Display */}
+                <div className="mb-6 w-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-1 shadow-lg">
+                  <div className="bg-white rounded-lg p-4">
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">
+                      Coverage Amount
+                    </h4>
+                    <div className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                      {insurance.insuranceCoverage?.toLocaleString() || "N/A"}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="relative w-48 h-48 rounded-full border-8 border-primary flex items-center justify-center bg-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl group">
                   <div className="absolute inset-0 rounded-full border-4 border-primary/20 animate-pulse"></div>
                   <div className="text-center transition-all duration-300 group-hover:transform group-hover:scale-110">

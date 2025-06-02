@@ -29,6 +29,7 @@ const AddInsurancePage = () => {
     companyName: "",
     insuranceType: "",
     price: "",
+    coverageAmount: "",
     startDate: "",
     ExpiryDate: "",
   });
@@ -79,6 +80,7 @@ const AddInsurancePage = () => {
             companyName: data.insuranceName || "",
             insuranceType: data.insuranceType || "",
             price: data.insurancePrice?.toString() || "",
+            coverageAmount: data.insuranceCoverage?.toString() || "",
             startDate: data.insuranceFromDate?.toString() || "",
             ExpiryDate: data.insuranceToDate?.toString() || "",
           });
@@ -184,6 +186,9 @@ const AddInsurancePage = () => {
         insuranceName: formData.companyName,
         insuranceType: formData.insuranceType,
         insurancePrice: Number(formData.price),
+        insuranceCoverage: formData.coverageAmount
+          ? Number(formData.coverageAmount)
+          : undefined,
         insuranceFromDate: formData.startDate,
         insuranceToDate: formData.ExpiryDate,
       };
@@ -297,6 +302,24 @@ const AddInsurancePage = () => {
                 />
                 {errors.price && (
                   <p className="text-sm text-destructive">{errors.price}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="coverageAmount">Coverage Amount</Label>
+                <Input
+                  id="coverageAmount"
+                  name="coverageAmount"
+                  type="number"
+                  placeholder="Enter coverage amount (optional)"
+                  value={formData.coverageAmount}
+                  onChange={handleInputChange}
+                  className={errors.coverageAmount ? "border-destructive" : ""}
+                />
+                {errors.coverageAmount && (
+                  <p className="text-sm text-destructive">
+                    {errors.coverageAmount}
+                  </p>
                 )}
               </div>
 

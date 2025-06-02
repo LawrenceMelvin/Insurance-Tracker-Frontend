@@ -166,6 +166,7 @@ const Home = () => {
                   insuranceName={policy.insuranceName}
                   insuranceType={policy.insuranceType}
                   insurancePrice={policy.insurancePrice}
+                  insuranceCoverage={policy.insuranceCoverage}
                   insuranceToDate={policy.insuranceToDate} // <-- camelCase!
                   onView={() => handleViewDetails(policy.insuranceId)}
                   onEdit={() => handleEditInsurance(policy.insuranceId)}
@@ -193,6 +194,7 @@ const Home = () => {
                     insuranceName="HealthGuard Plus"
                     insuranceType="Health"
                     insurancePrice={1200}
+                    insuranceCoverage={500000}
                     insuranceToDate="2025-06-30"
                   />
                   <InsuranceCard
@@ -200,6 +202,7 @@ const Home = () => {
                     insuranceName="LifeSecure Premium"
                     insuranceType="Life"
                     insurancePrice={2500}
+                    insuranceCoverage={1000000}
                     insuranceToDate="2035-12-31"
                   />
                   <InsuranceCard
@@ -207,6 +210,7 @@ const Home = () => {
                     insuranceName="AutoProtect Complete"
                     insuranceType="Auto"
                     insurancePrice={800}
+                    insuranceCoverage={50000}
                     insuranceToDate="2025-03-15"
                   />
                 </div>

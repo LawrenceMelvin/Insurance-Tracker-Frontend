@@ -25,6 +25,7 @@ interface InsuranceCardProps {
   insuranceName?: string;
   insuranceType?: string;
   insurancePrice?: number;
+  insuranceCoverage?: number;
   insuranceToDate?: string;
   onView?: (insuranceId: string) => void;
   onEdit?: (insuranceId: string) => void;
@@ -36,6 +37,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
   insuranceName = "ABC Insurance",
   insuranceType = "Health",
   insurancePrice = 1200,
+  insuranceCoverage = 100000,
   insuranceToDate = "2025-12-31",
   onView = () => {},
   onEdit = () => {},
@@ -50,7 +52,8 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
 
   const getInsuranceTypeColor = (type: string) => {
     // Capitalize the first letter, lowercase the rest
-    const normalizedType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    const normalizedType =
+      type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
     const types: Record<string, string> = {
       Health: "bg-green-100 text-green-800",
       Life: "bg-blue-100 text-blue-800",
@@ -71,7 +74,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
           </Badge>
         </div>
         <CardDescription className="text-sm text-gray-500">
-          Policy ID: {insuranceId}
+          Coverage: {insuranceCoverage?.toLocaleString() || "N/A"}
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-2">
@@ -79,7 +82,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <div className="flex justify-between">
             <span className="text-sm font-medium text-gray-500">Premium:</span>
             <span className="text-sm font-bold">
-              ${insurancePrice.toLocaleString()}
+              {insurancePrice.toLocaleString()}
             </span>
           </div>
           <div className="flex justify-between">

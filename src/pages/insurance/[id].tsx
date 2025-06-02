@@ -19,6 +19,7 @@ interface Insurance {
   insurancePrice: number;
   insuranceFromDate?: string;
   insuranceToDate?: string;
+  insuranceCoverage?: number;
 }
 
 const apiUrl = import.meta.env.VITE_APP_API_URL;

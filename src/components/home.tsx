@@ -9,6 +9,7 @@ interface Insurance {
   insuranceName: string;
   insuranceType: string;
   insurancePrice: number;
+  insuranceCoverage: number;
   insuranceFromDate?: string;
   insuranceToDate?: string;
   insuranceTerm?: string;

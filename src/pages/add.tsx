@@ -30,6 +30,7 @@ const AddInsurancePage = () => {
     insuranceType: "",
     price: "",
     coverageAmount: "",
+    dateOfBirth: "",
     startDate: "",
     ExpiryDate: "",
   });
@@ -81,6 +82,7 @@ const AddInsurancePage = () => {
             insuranceType: data.insuranceType || "",
             price: data.insurancePrice?.toString() || "",
             coverageAmount: data.insuranceCoverage?.toString() || "",
+            dateOfBirth: data.dateOfBirth || "",
             startDate: data.insuranceFromDate?.toString() || "",
             ExpiryDate: data.insuranceToDate?.toString() || "",
           });
@@ -186,9 +188,8 @@ const AddInsurancePage = () => {
         insuranceName: formData.companyName,
         insuranceType: formData.insuranceType,
         insurancePrice: Number(formData.price),
-        insuranceCoverage: formData.coverageAmount
-          ? Number(formData.coverageAmount)
-          : undefined,
+        insuranceCoverage: formData.coverageAmount ? Number(formData.coverageAmount) : undefined,
+        dateOfBirth: formData.dateOfBirth,
         insuranceFromDate: formData.startDate,
         insuranceToDate: formData.ExpiryDate,
       };
@@ -317,9 +318,22 @@ const AddInsurancePage = () => {
                   className={errors.coverageAmount ? "border-destructive" : ""}
                 />
                 {errors.coverageAmount && (
-                  <p className="text-sm text-destructive">
-                    {errors.coverageAmount}
-                  </p>
+                  <p className="text-sm text-destructive">{errors.coverageAmount}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                <Input
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  type="date"
+                  value={formData.dateOfBirth}
+                  onChange={handleInputChange}
+                  className={errors.dateOfBirth ? "border-destructive" : ""}
+                />
+                {errors.dateOfBirth && (
+                  <p className="text-sm text-destructive">{errors.dateOfBirth}</p>
                 )}
               </div>
 

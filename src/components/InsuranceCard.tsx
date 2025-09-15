@@ -50,6 +50,9 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
     setIsDeleteDialogOpen(false);
   };
 
+  // Check if policy is expired
+  const isExpired = new Date(insuranceToDate) < new Date();
+
   const getInsuranceTypeColor = (type: string) => {
     // Capitalize the first letter, lowercase the rest
     const normalizedType =
@@ -64,14 +67,26 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
     return types[normalizedType] || "bg-gray-100 text-gray-800";
   };
 
+  // Dynamic card styling based on expiration status
+  const cardClassName = isExpired 
+    ? "w-[350px] h-[220px] bg-white shadow-md hover:shadow-lg transition-shadow duration-300 border-2 border-red-500 shadow-red-200"
+    : "w-[350px] h-[220px] bg-white shadow-md hover:shadow-lg transition-shadow duration-300";
+
   return (
-    <Card className="w-[350px] h-[220px] bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+    <Card className={cardClassName}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-bold">{insuranceName}</CardTitle>
-          <Badge className={`${getInsuranceTypeColor(insuranceType)}`}>
-            {insuranceType}
-          </Badge>
+          <div className="flex gap-2">
+            {isExpired && (
+              <Badge className="bg-red-100 text-red-800">
+                Expired
+              </Badge>
+            )}
+            <Badge className={`${getInsuranceTypeColor(insuranceType)}`}>
+              {insuranceType}
+            </Badge>
+          </div>
         </div>
         <CardDescription className="text-sm text-gray-500">
           Coverage: {insuranceCoverage?.toLocaleString() || "N/A"}
@@ -87,7 +102,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
           </div>
           <div className="flex justify-between">
             <span className="text-sm font-medium text-gray-500">Expires:</span>
-            <span className="text-sm">
+            <span className={`text-sm ${isExpired ? 'text-red-600 font-semibold' : ''}`}>
               {new Date(insuranceToDate).toLocaleDateString()}
             </span>
           </div>

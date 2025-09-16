@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import InsuranceCard from "./InsuranceCard";
 import { Button } from "./ui/button";
+import { Scan } from "lucide-react";
 
 interface Insurance {
   insuranceId: string;
@@ -178,9 +179,27 @@ const Home = () => {
           ) : (
             <div className="flex flex-col items-center space-y-8 py-6">
               <div className="text-center max-w-3xl mx-auto px-4">
-                <h2 className="text-3xl font-bold text-primary mb-4">
-                  Welcome to Insurance Tracker
-                </h2>
+                <h1 className="text-3xl font-bold text-gray-900 mb-6">
+                  Welcome to InsureTrack
+                </h1>
+                
+                <div className="flex justify-center gap-3 mb-6">
+                  <Button
+                    onClick={() => navigate("/portfolio-scan")}
+                    className="bg-purple-600 hover:bg-purple-700 flex items-center"
+                  >
+                    <Scan className="mr-2 h-4 w-4" />
+                    Portfolio Scan
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/add")}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Insurance
+                  </Button>
+                </div>
+                
                 <p className="text-lg text-gray-600 mb-6">
                   Your all-in-one solution for managing insurance policies with
                   ease.

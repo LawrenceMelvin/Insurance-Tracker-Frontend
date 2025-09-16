@@ -8,22 +8,23 @@ import ResetPassword from "@/pages/auth/reset-password";
 import Register from "./pages/auth/register";
 import SetNewPassword from "@/pages/auth/set-new-password";
 import InsuranceDetailsPage from "./pages/insurance/[id]";
+import PortfolioScan from "./pages/portfolio-scan";
 
 function App() {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Navigate to="/" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/set-new-password" element={<SetNewPassword />} />
         <Route path="/add" element={<Add />} />
-        <Route path="/auth/login" element={<LoginPage />} />
-        <Route path="/auth/register" element={<Register />} />
-        <Route path="/auth/reset-password" element={<ResetPassword />} />
-        <Route path="/auth/set-new-password" element={<SetNewPassword />} />
-        <Route path="/insurance/:id" element={<InsuranceDetailsPage />} />
+        <Route path="/add/:id" element={<Add />} />
+        <Route path="/insurance/:id" element={<InsuranceDetails />} />
+        <Route path="/portfolio-scan" element={<PortfolioScan />} />
       </Routes>
-      {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
-    </Suspense>
+    </Router>
   );
 }
 

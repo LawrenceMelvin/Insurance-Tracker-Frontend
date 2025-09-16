@@ -1,30 +1,28 @@
-import { Suspense } from "react";
-import { Routes, Route, useRoutes, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useRoutes } from "react-router-dom";
 import Home from "./components/home";
 import Add from "./pages/add";
-import routes from "tempo-routes";
 import LoginPage from "@/pages/auth/login";
 import ResetPassword from "@/pages/auth/reset-password";
 import Register from "./pages/auth/register";
 import SetNewPassword from "@/pages/auth/set-new-password";
 import InsuranceDetailsPage from "./pages/insurance/[id]";
 import PortfolioScan from "./pages/portfolio-scan";
+import { Suspense } from "react";
 
 function App() {
   return (
-    <Router>
+    <Suspense fallback={<p>Loading...</p>}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/set-new-password" element={<SetNewPassword />} />
+        <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/add" element={<Add />} />
-        <Route path="/add/:id" element={<Add />} />
-        <Route path="/insurance/:id" element={<InsuranceDetails />} />
-        <Route path="/portfolio-scan" element={<PortfolioScan />} />
+        <Route path="/auth/login" element={<LoginPage />} />
+        <Route path="/auth/register" element={<Register />} />
+        <Route path="/auth/reset-password" element={<ResetPassword />} />
+        <Route path="/auth/set-new-password" element={<SetNewPassword />} />
+        <Route path="/insurance/:id" element={<InsuranceDetailsPage />} />
       </Routes>
-    </Router>
+    </Suspense>
   );
 }
 

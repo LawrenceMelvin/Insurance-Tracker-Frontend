@@ -65,6 +65,14 @@ const Home = () => {
     navigate("/add");
   };
 
+  const handlePortfolioScan = () => {
+    if (isAuthenticated) {
+      navigate("/portfolio-scan");
+    } else {
+      navigate("/auth/login");
+    }
+  };
+
   const handleViewDetails = (id: string) => {
     navigate(`/insurance/${id}`);
   };
@@ -147,12 +155,21 @@ const Home = () => {
             Your Insurance Policies
           </h2>
           {isAuthenticated && (
-            <Button
-              onClick={handleAddInsurance}
-              className="bg-primary hover:bg-primary/90"
-            >
-              <Plus className="mr-2 h-4 w-4" /> Add Insurance
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                onClick={handlePortfolioScan}
+                className="bg-purple-600 hover:bg-purple-700 flex items-center"
+              >
+                <Scan className="mr-2 h-4 w-4" />
+                Portfolio Scan
+              </Button>
+              <Button
+                onClick={handleAddInsurance}
+                className="bg-primary hover:bg-primary/90"
+              >
+                <Plus className="mr-2 h-4 w-4" /> Add Insurance
+              </Button>
+            </div>
           )}
         </div>
 
@@ -185,7 +202,7 @@ const Home = () => {
                 
                 <div className="flex justify-center gap-3 mb-6">
                   <Button
-                    onClick={() => navigate("/portfolio-scan")}
+                    onClick={handlePortfolioScan}
                     className="bg-purple-600 hover:bg-purple-700 flex items-center"
                   >
                     <Scan className="mr-2 h-4 w-4" />

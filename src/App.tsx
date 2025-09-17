@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate, useRoutes } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/home";
 import Add from "./pages/add";
 import LoginPage from "@/pages/auth/login";
@@ -7,7 +8,6 @@ import Register from "./pages/auth/register";
 import SetNewPassword from "@/pages/auth/set-new-password";
 import InsuranceDetailsPage from "./pages/insurance/[id]";
 import PortfolioScan from "./pages/portfolio-scan";
-import { Suspense } from "react";
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
         <Route path="/auth/reset-password" element={<ResetPassword />} />
         <Route path="/auth/set-new-password" element={<SetNewPassword />} />
         <Route path="/insurance/:id" element={<InsuranceDetailsPage />} />
+        <Route path="/portfolio-scan" element={<PortfolioScan />} />
       </Routes>
     </Suspense>
   );

@@ -83,13 +83,12 @@ export default function PortfolioScan() {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ insurancePolicies })
+        body: JSON.stringify(insurancePolicies)
       });
 
       if (!response.ok) {
         throw new Error('Failed to scan portfolio');
       }
-
       const data = await response.json();
       setAnalysis(data);
       setHasScanned(true);

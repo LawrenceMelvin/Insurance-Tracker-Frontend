@@ -13,15 +13,23 @@ import {
   ArrowLeft,
   Scan
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface Insurance {
   insuranceId: string;
   insuranceName: string;
   insuranceType: string;
   insurancePrice: number;
-  insuranceCoverage?: number;
-  insuranceToDate: string;
+  insuranceCoverage: number;
+  insuranceFromDate?: string;
+  insuranceToDate?: string;
+  insuranceTerm?: string;
+}
+
+interface PortfolioOverview {
+  totalPolicies: number;
+  annualPremium: number;
+  totalCoverage: number;
 }
 
 interface PortfolioAnalysis {
@@ -32,137 +40,65 @@ interface PortfolioAnalysis {
   strengths: string[];
 }
 
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+
 export default function PortfolioScan() {
   const navigate = useNavigate();
-  const [insurances, setInsurances] = useState<Insurance[]>([]);
+  const location = useLocation();
+  const [portfolioOverview, setPortfolioOverview] = useState<PortfolioOverview | null>(null);
   const [analysis, setAnalysis] = useState<PortfolioAnalysis | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [hasScanned, setHasScanned] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Get insurance policies from navigation state
+  const insurancePolicies: Insurance[] = location.state?.insurancePolicies || [];
 
   useEffect(() => {
-    // Load insurance data from localStorage or API
-    const savedInsurances = localStorage.getItem("insurances");
-    if (savedInsurances) {
-      setInsurances(JSON.parse(savedInsurances));
-    }
+    // Calculate portfolio overview from the passed insurance data
+    calculatePortfolioOverview();
   }, []);
 
-  const analyzePortfolio = () => {
-    setIsScanning(true);
-    
-    // Simulate scanning delay
-    setTimeout(() => {
-      const analysis = performPortfolioAnalysis(insurances);
-      setAnalysis(analysis);
-      setIsScanning(false);
-      setHasScanned(true);
-    }, 2000);
+  const calculatePortfolioOverview = () => {
+    const totalPolicies = insurancePolicies.length;
+    const annualPremium = insurancePolicies.reduce((sum, policy) => sum + policy.insurancePrice, 0);
+    const totalCoverage = insurancePolicies.reduce((sum, policy) => sum + policy.insuranceCoverage, 0);
+
+    setPortfolioOverview({
+      totalPolicies,
+      annualPremium,
+      totalCoverage
+    });
   };
 
-  const performPortfolioAnalysis = (insurances: Insurance[]): PortfolioAnalysis => {
-    const suggestions: string[] = [];
-    const coverageGaps: string[] = [];
-    const strengths: string[] = [];
-    let score = 0;
+  const scanPortfolio = async () => {
+    try {
+      setIsScanning(true);
+      setError(null);
+      
+      // Send insurance data to backend for analysis
+      const response = await fetch(`${apiUrl}/portfolio/scan`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ insurancePolicies })
+      });
 
-    // Check for insurance types
-    const types = insurances.map(ins => ins.insuranceType.toLowerCase());
-    const hasHealth = types.includes("health");
-    const hasLife = types.includes("life");
-    const hasAuto = types.includes("auto");
-    const hasHome = types.includes("home");
-    const hasTravel = types.includes("travel");
-
-    // Basic coverage check
-    if (!hasHealth) {
-      coverageGaps.push("Health Insurance");
-      suggestions.push("Health Insurance policy is missing from your portfolio. Consider adding comprehensive health coverage.");
-    } else {
-      const healthInsurance = insurances.find(ins => ins.insuranceType.toLowerCase() === "health");
-      if (healthInsurance?.insuranceCoverage && healthInsurance.insuranceCoverage < 300000) {
-        suggestions.push("Health insurance coverage is low. Consider increasing coverage to at least $300,000.");
-      } else {
-        strengths.push("Good health insurance coverage");
-        score += 25;
+      if (!response.ok) {
+        throw new Error('Failed to scan portfolio');
       }
+
+      const data = await response.json();
+      setAnalysis(data);
+      setHasScanned(true);
+    } catch (error) {
+      console.error('Error scanning portfolio:', error);
+      setError('Failed to scan portfolio. Please try again.');
+    } finally {
+      setIsScanning(false);
     }
-
-    if (!hasLife) {
-      coverageGaps.push("Life Insurance");
-      suggestions.push("Life Insurance policy is missing from your portfolio. Life insurance is essential for financial security.");
-    } else {
-      const lifeInsurance = insurances.find(ins => ins.insuranceType.toLowerCase() === "life");
-      if (lifeInsurance?.insuranceCoverage && lifeInsurance.insuranceCoverage < 500000) {
-        suggestions.push("Life insurance coverage might be insufficient. Consider coverage of at least $500,000.");
-      } else {
-        strengths.push("Adequate life insurance coverage");
-        score += 25;
-      }
-    }
-
-    if (!hasAuto) {
-      suggestions.push("Consider adding Auto Insurance if you own a vehicle.");
-    } else {
-      strengths.push("Auto insurance coverage in place");
-      score += 15;
-    }
-
-    if (!hasHome) {
-      suggestions.push("Consider adding Home/Property Insurance if you own property.");
-    } else {
-      strengths.push("Property insurance coverage in place");
-      score += 15;
-    }
-
-    // Check for expired policies
-    const expiredPolicies = insurances.filter(ins => new Date(ins.insuranceToDate) < new Date());
-    if (expiredPolicies.length > 0) {
-      suggestions.push(`You have ${expiredPolicies.length} expired ${expiredPolicies.length === 1 ? 'policy' : 'policies'}. Renew them immediately.`);
-      score -= 10;
-    }
-
-    // Check for upcoming expirations (within 30 days)
-    const upcomingExpirations = insurances.filter(ins => {
-      const expiryDate = new Date(ins.insuranceToDate);
-      const thirtyDaysFromNow = new Date();
-      thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-      return expiryDate <= thirtyDaysFromNow && expiryDate >= new Date();
-    });
-
-    if (upcomingExpirations.length > 0) {
-      suggestions.push(`${upcomingExpirations.length} ${upcomingExpirations.length === 1 ? 'policy expires' : 'policies expire'} within 30 days. Plan for renewal.`);
-    }
-
-    // Diversity bonus
-    if (types.length >= 3) {
-      strengths.push("Good portfolio diversity");
-      score += 10;
-    }
-
-    // Premium analysis
-    const totalPremium = insurances.reduce((sum, ins) => sum + ins.insurancePrice, 0);
-    if (totalPremium > 0) {
-      strengths.push(`Total annual premium: $${totalPremium.toLocaleString()}`);
-      score += 5;
-    }
-
-    // Determine overall rating
-    let overallRating: "Bad" | "Average" | "Good";
-    if (score >= 70) {
-      overallRating = "Good";
-    } else if (score >= 40) {
-      overallRating = "Average";
-    } else {
-      overallRating = "Bad";
-    }
-
-    return {
-      overallRating,
-      score: Math.max(0, Math.min(100, score)),
-      suggestions,
-      coverageGaps,
-      strengths
-    };
   };
 
   const getRatingColor = (rating: string) => {
@@ -203,6 +139,15 @@ export default function PortfolioScan() {
           </p>
         </div>
 
+        {error && (
+          <Alert className="mb-6 border-red-200">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription className="text-red-600">
+              {error}
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Portfolio Overview */}
         <Card className="mb-6">
           <CardHeader>
@@ -215,19 +160,19 @@ export default function PortfolioScan() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {insurances.length}
+                  {portfolioOverview?.totalPolicies || 0}
                 </div>
                 <div className="text-sm text-gray-500">Total Policies</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  ${insurances.reduce((sum, ins) => sum + ins.insurancePrice, 0).toLocaleString()}
+                  ${portfolioOverview?.annualPremium?.toLocaleString() || 0}
                 </div>
                 <div className="text-sm text-gray-500">Annual Premium</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">
-                  ${insurances.reduce((sum, ins) => sum + (ins.insuranceCoverage || 0), 0).toLocaleString()}
+                  ${portfolioOverview?.totalCoverage?.toLocaleString() || 0}
                 </div>
                 <div className="text-sm text-gray-500">Total Coverage</div>
               </div>
@@ -239,8 +184,8 @@ export default function PortfolioScan() {
         {!hasScanned && (
           <div className="text-center mb-8">
             <Button
-              onClick={analyzePortfolio}
-              disabled={isScanning || insurances.length === 0}
+              onClick={scanPortfolio}
+              disabled={isScanning || (portfolioOverview?.totalPolicies || 0) === 0}
               size="lg"
               className="bg-blue-600 hover:bg-blue-700"
             >
@@ -256,7 +201,7 @@ export default function PortfolioScan() {
                 </>
               )}
             </Button>
-            {insurances.length === 0 && (
+            {(portfolioOverview?.totalPolicies || 0) === 0 && (
               <p className="text-sm text-gray-500 mt-2">
                 Add some insurance policies first to scan your portfolio
               </p>

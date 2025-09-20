@@ -67,7 +67,12 @@ const Home = () => {
 
   const handlePortfolioScan = () => {
     if (isAuthenticated) {
-      navigate("/portfolio-scan");
+      // Pass insurance data to portfolio scan page
+      navigate("/portfolio-scan", { 
+        state: { 
+          insurancePolicies: insurancePolicies 
+        } 
+      });
     } else {
       navigate("/auth/login");
     }

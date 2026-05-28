@@ -45,6 +45,7 @@ const apiUrl = import.meta.env.VITE_APP_API_URL;
 export default function PortfolioScan() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [portfolioOverview, setPortfolioOverview] = useState<PortfolioOverview | null>(null);
   const [analysis, setAnalysis] = useState<PortfolioAnalysis | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -55,9 +56,33 @@ export default function PortfolioScan() {
   const insurancePolicies: Insurance[] = location.state?.insurancePolicies || [];
 
   useEffect(() => {
-    // Calculate portfolio overview from the passed insurance data
-    calculatePortfolioOverview();
+    fetch(`${apiUrl}/user`, {
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.authenticated === true) {
+            setIsAuthenticated(true);
+            return;
+          }
+        }
+        setIsAuthenticated(false);
+      })
+      .catch(() => setIsAuthenticated(false));
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      navigate("/auth/login");
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (isAuthenticated === true) {
+      calculatePortfolioOverview();
+    }
+  }, [isAuthenticated]);
 
   const calculatePortfolioOverview = () => {
     const totalPolicies = insurancePolicies.length;
@@ -117,6 +142,17 @@ export default function PortfolioScan() {
       default: return <Shield className="h-5 w-5" />;
     }
   };
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium">Checking authorization...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">

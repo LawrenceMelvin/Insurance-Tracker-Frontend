@@ -23,6 +23,13 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const apiUrl = import.meta.env.VITE_APP_API_URL;
 
+interface FamilyProfile {
+  profileId: number;
+  fullName: string;
+  relationship: string;
+  isVirtual: boolean;
+}
+
 const AddInsurancePage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -34,6 +41,8 @@ const AddInsurancePage = () => {
     startDate: "",
     ExpiryDate: "",
   });
+  const [selectedProfileId, setSelectedProfileId] = useState<string>("self");
+  const [familyProfiles, setFamilyProfiles] = useState<FamilyProfile[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -43,17 +52,32 @@ const AddInsurancePage = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetch(`${apiUrl}/user`, {
-      credentials: "include",
-    })
-      .then((res) => {
+    fetch(`${apiUrl}/user`, { credentials: "include" })
+      .then(async (res) => {
         if (res.ok) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
+          const data = await res.json();
+          if (data && data.authenticated === true) {
+            setIsAuthenticated(true);
+            return;
+          }
         }
+        setIsAuthenticated(false);
       })
       .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  // Fetch family profiles for the owner dropdown
+  useEffect(() => {
+    fetch(`${apiUrl}/family/members`, { credentials: "include" })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          if (data.inFamily && data.profiles) {
+            setFamilyProfiles(data.profiles);
+          }
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -86,6 +110,11 @@ const AddInsurancePage = () => {
             startDate: data.insuranceFromDate?.toString() || "",
             ExpiryDate: data.insuranceToDate?.toString() || "",
           });
+          if (data.familyMemberProfileId) {
+            setSelectedProfileId(data.familyMemberProfileId.toString());
+          } else {
+            setSelectedProfileId("self");
+          }
         })
         .catch((error) => {
           console.error("Error fetching insurance details:", error);
@@ -183,8 +212,7 @@ const AddInsurancePage = () => {
     setSubmitError("");
 
     try {
-      // Prepare data for backend
-      const payload = {
+      const payload: Record<string, unknown> = {
         insuranceName: formData.companyName,
         insuranceType: formData.insuranceType,
         insurancePrice: Number(formData.price),
@@ -193,6 +221,15 @@ const AddInsurancePage = () => {
         insuranceFromDate: formData.startDate,
         insuranceToDate: formData.ExpiryDate,
       };
+
+      // Attach family profile if selected
+      if (selectedProfileId && selectedProfileId !== "self") {
+        payload.familyMemberProfile = { profileId: Number(selectedProfileId) };
+        payload.familyMemberProfileId = Number(selectedProfileId);
+      } else {
+        payload.familyMemberProfile = null;
+        payload.familyMemberProfileId = null;
+      }
 
       const endpoint = isEditMode
         ? `${apiUrl}/insurance/update/${insuranceId}`
@@ -242,6 +279,29 @@ const AddInsurancePage = () => {
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{submitError}</AlertDescription>
                 </Alert>
+              )}
+
+              {/* Who does this policy belong to? */}
+              {familyProfiles.length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="policyOwner">Who does this policy belong to?</Label>
+                  <Select
+                    value={selectedProfileId}
+                    onValueChange={(value) => setSelectedProfileId(value)}
+                  >
+                    <SelectTrigger id="policyOwner">
+                      <SelectValue placeholder="Select member" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="self">Myself (Self)</SelectItem>
+                      {familyProfiles.map((profile) => (
+                        <SelectItem key={profile.profileId} value={String(profile.profileId)}>
+                          {profile.fullName} ({profile.relationship})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               )}
 
               <div className="space-y-2">

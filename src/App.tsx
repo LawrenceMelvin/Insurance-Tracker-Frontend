@@ -8,6 +8,7 @@ import Register from "./pages/auth/register";
 import SetNewPassword from "@/pages/auth/set-new-password";
 import InsuranceDetailsPage from "./pages/insurance/[id]";
 import PortfolioScan from "./pages/portfolio-scan";
+import Family from "./pages/family";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/auth/set-new-password" element={<SetNewPassword />} />
         <Route path="/insurance/:id" element={<InsuranceDetailsPage />} />
         <Route path="/portfolio-scan" element={<PortfolioScan />} />
+        <Route path="/family" element={<Family />} />
       </Routes>
     </Suspense>
   );

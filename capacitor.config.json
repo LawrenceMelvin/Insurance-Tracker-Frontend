@@ -1,0 +1,10 @@
+{
+  "appId": "com.lawrence.insuretracks",
+  "appName": "InsureTracks",
+  "webDir": "dist",
+  "plugins": {
+    "CapacitorCookies": {
+      "enabled": true
+    }
+  }
+}

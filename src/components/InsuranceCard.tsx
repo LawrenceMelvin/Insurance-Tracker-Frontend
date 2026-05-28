@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2, User } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ interface InsuranceCardProps {
   insurancePrice?: number;
   insuranceCoverage?: number;
   insuranceToDate?: string;
+  belongsToName?: string;
   onView?: (insuranceId: string) => void;
   onEdit?: (insuranceId: string) => void;
   onDelete?: (insuranceId: string) => void;
@@ -39,6 +40,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
   insurancePrice = 1200,
   insuranceCoverage = 100000,
   insuranceToDate = "2025-12-31",
+  belongsToName,
   onView = () => {},
   onEdit = () => {},
   onDelete = () => {},
@@ -77,7 +79,7 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-bold">{insuranceName}</CardTitle>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-end">
             {isExpired && (
               <Badge className="bg-red-100 text-red-800">
                 Expired
@@ -88,9 +90,17 @@ const InsuranceCard: React.FC<InsuranceCardProps> = ({
             </Badge>
           </div>
         </div>
-        <CardDescription className="text-sm text-gray-500">
-          Coverage: {insuranceCoverage?.toLocaleString() || "N/A"}
-        </CardDescription>
+        <div className="flex justify-between items-center">
+          <CardDescription className="text-sm text-gray-500">
+            Coverage: {insuranceCoverage?.toLocaleString() || "N/A"}
+          </CardDescription>
+          {belongsToName && belongsToName !== "Self" && (
+            <Badge variant="outline" className="text-indigo-600 border-indigo-200 bg-indigo-50 text-xs flex items-center gap-1">
+              <User className="h-3 w-3" />
+              {belongsToName}
+            </Badge>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="pb-2">
         <div className="space-y-2">

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -46,10 +47,31 @@ const AddInsurancePage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(() => {
+    return localStorage.getItem("isLoggedIn") === "true" ? null : false;
+  });
   const [isEditMode, setIsEditMode] = useState(false);
   const [insuranceId, setInsuranceId] = useState("");
+  const [policyAnalysisJson, setPolicyAnalysisJson] = useState("");
   const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.prefillData) {
+      const data = location.state.prefillData;
+      setFormData({
+        companyName: data.companyName || "",
+        insuranceType: data.insuranceType || "",
+        price: data.price || "",
+        coverageAmount: data.coverageAmount || "",
+        dateOfBirth: data.dateOfBirth || "",
+        startDate: data.startDate || "",
+        ExpiryDate: data.ExpiryDate || "",
+      });
+      if (data.policyAnalysisJson) {
+        setPolicyAnalysisJson(data.policyAnalysisJson);
+      }
+    }
+  }, [location.state]);
 
   useEffect(() => {
     fetch(`${apiUrl}/user`, { credentials: "include" })
@@ -58,12 +80,17 @@ const AddInsurancePage = () => {
           const data = await res.json();
           if (data && data.authenticated === true) {
             setIsAuthenticated(true);
+            localStorage.setItem("isLoggedIn", "true");
             return;
           }
         }
         setIsAuthenticated(false);
+        localStorage.removeItem("isLoggedIn");
       })
-      .catch(() => setIsAuthenticated(false));
+      .catch(() => {
+        setIsAuthenticated(false);
+        localStorage.removeItem("isLoggedIn");
+      });
   }, []);
 
   // Fetch family profiles for the owner dropdown
@@ -110,6 +137,9 @@ const AddInsurancePage = () => {
             startDate: data.insuranceFromDate?.toString() || "",
             ExpiryDate: data.insuranceToDate?.toString() || "",
           });
+          if (data.policyAnalysisJson) {
+            setPolicyAnalysisJson(data.policyAnalysisJson);
+          }
           if (data.familyMemberProfileId) {
             setSelectedProfileId(data.familyMemberProfileId.toString());
           } else {
@@ -158,6 +188,13 @@ const AddInsurancePage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+ 
+  const handleDateChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -220,6 +257,7 @@ const AddInsurancePage = () => {
         dateOfBirth: formData.dateOfBirth,
         insuranceFromDate: formData.startDate,
         insuranceToDate: formData.ExpiryDate,
+        policyAnalysisJson: policyAnalysisJson || undefined,
       };
 
       // Attach family profile if selected
@@ -384,13 +422,11 @@ const AddInsurancePage = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="dateOfBirth">Date of Birth</Label>
-                <Input
-                  id="dateOfBirth"
-                  name="dateOfBirth"
-                  type="date"
+                <DatePicker
                   value={formData.dateOfBirth}
-                  onChange={handleInputChange}
+                  onChange={(val) => handleDateChange("dateOfBirth", val)}
                   className={errors.dateOfBirth ? "border-destructive" : ""}
+                  placeholder="Select date of birth"
                 />
                 {errors.dateOfBirth && (
                   <p className="text-sm text-destructive">{errors.dateOfBirth}</p>
@@ -399,14 +435,11 @@ const AddInsurancePage = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="startDate">Insurance Start Date</Label>
-                <Input
-                  id="startDate"
-                  name="startDate"
-                  type="date"
-                  placeholder="Select start date"
+                <DatePicker
                   value={formData.startDate}
-                  onChange={handleInputChange}
+                  onChange={(val) => handleDateChange("startDate", val)}
                   className={errors.startDate ? "border-destructive" : ""}
+                  placeholder="Select start date"
                 />
                 {errors.startDate && (
                   <p className="text-sm text-destructive">{errors.startDate}</p>
@@ -415,14 +448,11 @@ const AddInsurancePage = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="ExpiryDate">Expiry Date</Label>
-                <Input
-                  id="ExpiryDate"
-                  name="ExpiryDate"
-                  type="date"
-                  placeholder="Select expiry date"
+                <DatePicker
                   value={formData.ExpiryDate}
-                  onChange={handleInputChange}
+                  onChange={(val) => handleDateChange("ExpiryDate", val)}
                   className={errors.ExpiryDate ? "border-destructive" : ""}
+                  placeholder="Select expiry date"
                 />
                 {errors.ExpiryDate && (
                   <p className="text-sm text-destructive">

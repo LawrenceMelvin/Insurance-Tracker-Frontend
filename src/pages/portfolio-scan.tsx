@@ -45,7 +45,9 @@ const apiUrl = import.meta.env.VITE_APP_API_URL;
 export default function PortfolioScan() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(() => {
+    return localStorage.getItem("isLoggedIn") === "true" ? null : false;
+  });
   const [portfolioOverview, setPortfolioOverview] = useState<PortfolioOverview | null>(null);
   const [analysis, setAnalysis] = useState<PortfolioAnalysis | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -64,12 +66,17 @@ export default function PortfolioScan() {
           const data = await res.json();
           if (data && data.authenticated === true) {
             setIsAuthenticated(true);
+            localStorage.setItem("isLoggedIn", "true");
             return;
           }
         }
         setIsAuthenticated(false);
+        localStorage.removeItem("isLoggedIn");
       })
-      .catch(() => setIsAuthenticated(false));
+      .catch(() => {
+        setIsAuthenticated(false);
+        localStorage.removeItem("isLoggedIn");
+      });
   }, []);
 
   useEffect(() => {
@@ -101,11 +108,15 @@ export default function PortfolioScan() {
       setIsScanning(true);
       setError(null);
       
+      // Detect browser localized currency code (e.g. "USD", "INR", "EUR")
+      const detectedCurrency = new Intl.NumberFormat().resolvedOptions().currency || "USD";
+
       // Send insurance data to backend for analysis
       const response = await fetch(`${apiUrl}/portfolio/scan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-User-Currency': detectedCurrency
         },
         credentials: 'include',
         body: JSON.stringify(insurancePolicies)
@@ -201,13 +212,13 @@ export default function PortfolioScan() {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  ${portfolioOverview?.annualPremium?.toLocaleString() || 0}
+                  {portfolioOverview?.annualPremium?.toLocaleString() || 0}
                 </div>
                 <div className="text-sm text-gray-500">Annual Premium</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">
-                  ${portfolioOverview?.totalCoverage?.toLocaleString() || 0}
+                  {portfolioOverview?.totalCoverage?.toLocaleString() || 0}
                 </div>
                 <div className="text-sm text-gray-500">Total Coverage</div>
               </div>

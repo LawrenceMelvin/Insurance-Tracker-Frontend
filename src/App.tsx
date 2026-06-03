@@ -9,6 +9,10 @@ import SetNewPassword from "@/pages/auth/set-new-password";
 import InsuranceDetailsPage from "./pages/insurance/[id]";
 import PortfolioScan from "./pages/portfolio-scan";
 import Family from "./pages/family";
+import Docs from "./pages/docs";
+import Claims from "./pages/claims";
+import ClaimWizard from "./pages/claim-wizard";
+import ExplainPolicy from "./pages/explain-policy";
 
 function App() {
   return (
@@ -17,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/add" element={<Add />} />
+        <Route path="/explain" element={<ExplainPolicy />} />
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/reset-password" element={<ResetPassword />} />
@@ -24,6 +29,9 @@ function App() {
         <Route path="/insurance/:id" element={<InsuranceDetailsPage />} />
         <Route path="/portfolio-scan" element={<PortfolioScan />} />
         <Route path="/family" element={<Family />} />
+        <Route path="/docs" element={<Docs />} />
+        <Route path="/claims" element={<Claims />} />
+        <Route path="/claims/new" element={<ClaimWizard />} />
       </Routes>
     </Suspense>
   );

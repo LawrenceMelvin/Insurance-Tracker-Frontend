@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -46,7 +47,9 @@ interface FamilyData {
 export default function Family() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(() => {
+    return localStorage.getItem("isLoggedIn") === "true" ? null : false;
+  });
   const [familyData, setFamilyData] = useState<FamilyData | null>(null);
   const [groupNameInput, setGroupNameInput] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
@@ -63,12 +66,17 @@ export default function Family() {
           const data = await res.json();
           if (data && data.authenticated === true) {
             setIsAuthenticated(true);
+            localStorage.setItem("isLoggedIn", "true");
             return;
           }
         }
         setIsAuthenticated(false);
+        localStorage.removeItem("isLoggedIn");
       })
-      .catch(() => setIsAuthenticated(false));
+      .catch(() => {
+        setIsAuthenticated(false);
+        localStorage.removeItem("isLoggedIn");
+      });
   }, []);
 
   useEffect(() => {
@@ -386,11 +394,10 @@ export default function Family() {
                     </div>
                     <div>
                       <Label htmlFor="vDob">Date of Birth</Label>
-                      <Input
-                        id="vDob"
-                        type="date"
+                      <DatePicker
                         value={profileDob}
-                        onChange={(e) => setProfileDob(e.target.value)}
+                        onChange={setProfileDob}
+                        placeholder="Select date of birth"
                         className="mt-1"
                       />
                     </div>

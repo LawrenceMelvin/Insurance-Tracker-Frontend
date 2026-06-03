@@ -35,7 +35,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [checkingAuth, setCheckingAuth] = useState(() => {
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
   const [verificationSuccess, setVerificationSuccess] = useState(false);
 
   const {
@@ -71,8 +73,14 @@ export default function LoginPage() {
       .then((res) => {
         if (res.ok) {
           // User is authenticated, redirect to home
+          localStorage.setItem("isLoggedIn", "true");
           navigate("/");
+        } else {
+          localStorage.removeItem("isLoggedIn");
         }
+      })
+      .catch(() => {
+        localStorage.removeItem("isLoggedIn");
       })
       .finally(() => setCheckingAuth(false));
   }, [navigate, location.search]);
@@ -100,6 +108,7 @@ export default function LoginPage() {
           credentials: "include",
         });
         if (userRes.ok) {
+          localStorage.setItem("isLoggedIn", "true");
           navigate("/");
         } else {
           setLoginError("Login failed. Please try again.");

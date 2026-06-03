@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Users, Scan, UserPlus, Mail } from "lucide-react";
+import { Plus, Users, Scan, UserPlus, Mail, FileText, Sparkles } from "lucide-react";
 import InsuranceCard from "./InsuranceCard";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
@@ -17,6 +17,7 @@ interface Insurance {
   insuranceToDate?: string;
   insuranceTerm?: string;
   belongsToName?: string;
+  policyAnalysisJson?: string;
 }
 
 const apiUrl = import.meta.env.VITE_APP_API_URL;
@@ -50,7 +51,9 @@ const CardSkeleton = () => (
 
 const Home = () => {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(() => {
+    return localStorage.getItem("isLoggedIn") === "true" ? null : false;
+  });
   const [myPolicies, setMyPolicies] = useState<Insurance[]>([]);
   const [familyPolicies, setFamilyPolicies] = useState<Insurance[]>([]);
   const [activeTab, setActiveTab] = useState<"my" | "family">("my");
@@ -111,15 +114,18 @@ const Home = () => {
           if (user && user.authenticated === true) {
             setIsAuthenticated(true);
             setUserName(user.name || user.username || "");
+            localStorage.setItem("isLoggedIn", "true");
             return;
           }
         }
         setIsAuthenticated(false);
         setUserName("");
+        localStorage.removeItem("isLoggedIn");
       })
       .catch(() => {
         setIsAuthenticated(false);
         setUserName("");
+        localStorage.removeItem("isLoggedIn");
       });
   }, [navigate]);
 
@@ -199,10 +205,24 @@ const Home = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Insurance Tracker</h1>
+          <div className="flex items-center space-x-6">
+            <h1 
+              className="text-2xl font-bold text-gray-900 cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              Insurance Tracker
+            </h1>
+            {!isAuthenticated && (
+              <span
+                onClick={() => navigate("/docs")}
+                className="text-sm font-medium text-slate-600 hover:text-slate-900 cursor-pointer transition-colors"
+              >
+                Docs
+              </span>
+            )}
+          </div>
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
@@ -221,12 +241,31 @@ const Home = () => {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => navigate("/claims")}
+                  className="flex items-center gap-1 border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                >
+                  <FileText className="h-4 w-4" />
+                  Claims
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/explain")}
+                  className="flex items-center gap-1 border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                >
+                  <Sparkles className="h-4 w-4 text-indigo-500" />
+                  AI Explainer
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={async () => {
                     await fetch(`${apiUrl}/auth/logout`, {
                       method: "POST",
                       credentials: "include",
                     });
                     localStorage.removeItem("authToken");
+                    localStorage.removeItem("isLoggedIn");
                     setIsAuthenticated(false);
                     setUserName("");
                     window.location.href = "/auth/login";
@@ -372,6 +411,13 @@ const Home = () => {
                   Portfolio Scan
                 </Button>
                 <Button
+                  onClick={() => navigate("/explain")}
+                  className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white flex items-center border-none shadow-md shadow-indigo-100 font-medium"
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  AI Explainer
+                </Button>
+                <Button
                   onClick={() => navigate("/add")}
                   className="bg-primary hover:bg-primary/90"
                 >
@@ -429,6 +475,7 @@ const Home = () => {
                     insuranceCoverage={policy.insuranceCoverage}
                     insuranceToDate={policy.insuranceToDate}
                     belongsToName={policy.belongsToName}
+                    policyAnalysisJson={policy.policyAnalysisJson}
                     onView={() => navigate(`/insurance/${policy.insuranceId}`)}
                     onEdit={() => navigate(`/add?edit=${policy.insuranceId}`)}
                     onDelete={() => handleDelete(policy.insuranceId)}
@@ -452,6 +499,13 @@ const Home = () => {
                 >
                   <Scan className="mr-2 h-4 w-4" />
                   Portfolio Scan
+                </Button>
+                <Button
+                  onClick={() => navigate("/explain")}
+                  className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white flex items-center border-none shadow-md shadow-indigo-100 font-medium animate-pulse"
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  AI Explainer
                 </Button>
                 <Button
                   onClick={() => navigate("/add")}
@@ -500,7 +554,7 @@ const Home = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 Key Features
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
                   <div className="flex justify-center mb-4">
                     <img
@@ -529,6 +583,21 @@ const Home = () => {
                   </h3>
                   <p className="text-gray-600">
                     See all your family's insurance coverage in one pooled view.
+                  </p>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                  <div className="flex justify-center mb-4">
+                    <img
+                      src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80"
+                      alt="AI Profile Scan"
+                      className="rounded-lg h-40 w-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-800">
+                    AI Insurance Profile Scan
+                  </h3>
+                  <p className="text-gray-600">
+                    Instantly scan your policies to detect coverage gaps, highlight strengths, and receive smart AI recommendations.
                   </p>
                 </div>
               </div>

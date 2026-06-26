@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /$
+Allow: /auth/login
+Allow: /auth/register
+Allow: /auth/reset-password
+Disallow: /add
+Disallow: /explain
+Disallow: /insurance/
+Disallow: /portfolio-scan
+Disallow: /family
+Disallow: /docs
+Disallow: /claims
+Disallow: /estimate
+
+Sitemap: https://insuretracks.com/sitemap.xml

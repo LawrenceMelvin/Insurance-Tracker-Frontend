@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Users, Scan, UserPlus, Mail, FileText, Sparkles } from "lucide-react";
+import { Plus, Users, Scan, UserPlus, Mail, FileText, Sparkles, Calculator } from "lucide-react";
 import InsuranceCard from "./InsuranceCard";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
@@ -259,6 +259,15 @@ const Home = () => {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => navigate("/estimate")}
+                  className="flex items-center gap-1 border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                >
+                  <Calculator className="h-4 w-4 text-indigo-500" />
+                  Estimator
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={async () => {
                     await fetch(`${apiUrl}/auth/logout`, {
                       method: "POST",
@@ -416,6 +425,13 @@ const Home = () => {
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   AI Explainer
+                </Button>
+                <Button
+                  onClick={() => navigate("/estimate")}
+                  className="bg-teal-600 hover:bg-teal-700 text-white flex items-center shadow-md shadow-teal-100 font-medium"
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
+                  Estimator
                 </Button>
                 <Button
                   onClick={() => navigate("/add")}

@@ -13,6 +13,7 @@ import Docs from "./pages/docs";
 import Claims from "./pages/claims";
 import ClaimWizard from "./pages/claim-wizard";
 import ExplainPolicy from "./pages/explain-policy";
+import Estimate from "./pages/estimate";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/docs" element={<Docs />} />
         <Route path="/claims" element={<Claims />} />
         <Route path="/claims/new" element={<ClaimWizard />} />
+        <Route path="/estimate" element={<Estimate />} />
       </Routes>
     </Suspense>
   );
